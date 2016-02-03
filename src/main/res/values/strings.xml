@@ -1,0 +1,75 @@
+<resources>
+    <string name="app_name">Coagmento</string>
+
+
+    <string name="server_base_url">http://172.31.255.32:8000</string>
+
+
+    <string name="title_activity_login">Sign In</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_server_host">Coagmento Host Server URL</string>
+    <string name="prompt_name">Name</string>
+    <string name="action_sign_in">Sign In</string>
+    <string name="action_register">Register</string>
+    <string name="action_keep_me_signed_in">Keep Me Signed In</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_project_settings">Edit Project</string>
+    <string name="title_activity_register">Register</string>
+
+    <!-- Strings for New Project Activity -->
+    <string name="prompt_project_title">Title</string>
+    <string name="prompt_project_description">Description</string>
+    <string name="prompt_switch_on">Allow Others To Look At Your Project?</string>
+    <string name="action_create_project">Create Project</string>
+
+    <!-- Strings for Navigation Drawer -->
+    <string name="heading_my_projects">My Projects</string>
+    <string name="heading_shared_projects">Shared Projects</string>
+    <string name="item_new_project">New Project</string>
+    <string name="item_logout">Logout</string>
+
+    <!-- Strings for Edit Project Form -->
+    <string name="action_save_settings">Save Settings</string>
+    <string name="prompt_permission">User Permission Level: </string>
+    <string name="action_delete_project">Delete Project</string>
+    <string name="prompt_project_user_list">Members of this project:</string>
+    <string-array name="permission_set">
+        <item>READ</item>
+        <item>WRITE</item>
+        <item>OWNER</item>
+        <item>REMOVE</item>
+    </string-array>
+    <string name="action_add_user">Add User</string>
+    <string name="edit_project_add_person_button">Add Person</string>
+    <string name="edit_project_rename_button">Rename</string>
+    <string name="edit_project_remove_button">Remove</string>
+    <string name="edit_project_title_label">Title</string>
+    <string name="edit_project_description_label">Description</string>
+    <string name="edit_project_created_label">Created</string>
+    <string name="edit_project_modified_label">Last Modified</string>
+    <string name="edit_project_privacy_label">Access</string>
+    <string name="edit_project_members_label">Project Members</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_fragment_bookmarks">Bookmarks</string>
+    <string name="main_fragment_pages">Pages</string>
+    <string name="main_fragment_documents">Documents</string>
+    <string name="main_fragment_snippets">Snippets</string>
+    <string name="prompt_no_projects_found">No projects were found under your account. \n\nPlease create a project to start using Coagmento.</string>
+
+</resources>

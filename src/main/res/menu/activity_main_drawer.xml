@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="none">
+        <item android:id="@+id/nav_new_project" android:icon="@drawable/ic_create_new_folder_black_24dp"
+            android:title="New Project" />
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:checkable="true" android:id="@+id/myProjects" android:title="My Projects">
+            <menu>
+
+            </menu>
+        </item>
+
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item android:checkable="true" android:id="@+id/sharedProjects" android:title="Shared Projects">
+            <menu>
+
+            </menu>
+        </item>
+
+    </group>
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_logout_group" android:title="Options">
+            <menu>
+                <item android:id="@+id/nav_logout" android:icon="@android:drawable/ic_menu_close_clear_cancel"
+            android:title="Logout" />
+            </menu>
+        </item>
+    </group>
+
+</menu>

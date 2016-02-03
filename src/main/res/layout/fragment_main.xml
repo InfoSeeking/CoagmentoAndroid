@@ -1,0 +1,139 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?android:attr/actionBarSize"
+    tools:context="org.coagmento.android.fragment.MainFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/bookmark"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp" />
+
+                <TextView
+                    android:paddingTop="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/titleTextAppearance"
+                    android:textSize="25sp"
+                    android:text="@string/main_fragment_bookmarks"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/pages"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp" />
+
+                <TextView
+                    android:paddingTop="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/titleTextAppearance"
+                    android:textSize="25sp"
+                    android:text="@string/main_fragment_pages"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/documents"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp" />
+
+                <TextView
+                    android:paddingTop="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/titleTextAppearance"
+                    android:textSize="25sp"
+                    android:text="@string/main_fragment_documents"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:src="@drawable/notes"
+                    android:layout_gravity="center"
+                    android:scaleType="fitCenter"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp" />
+
+                <TextView
+                    android:paddingTop="25dp"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?attr/titleTextAppearance"
+                    android:textSize="25sp"
+                    android:text="@string/main_fragment_snippets"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
