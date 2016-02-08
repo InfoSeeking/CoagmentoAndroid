@@ -27,6 +27,7 @@ import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.squareup.okhttp.ResponseBody;
 
 import org.coagmento.android.data.EndpointsInterface;
+import org.coagmento.android.fragment.BookmarksFragment;
 import org.coagmento.android.fragment.MainFragment;
 import org.coagmento.android.fragment.RecyclerViewFragment;
 import org.coagmento.android.models.Errors;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity
     private String host, email, password, name;
     private List<Result> projectList, myProjectList, sharedProjectList;
     private Result currentProject = null;
+    private Bundle userInfo = new Bundle();
 
 
     @Override
@@ -85,16 +87,19 @@ public class MainActivity extends AppCompatActivity
         name = prefs.getString("name", null);
         email = prefs.getString("email", null);
         password = prefs.getString("password", null);
+        userInfo.putString("host", host);
+        userInfo.putString("email", email);
+        userInfo.putString("password", password);
 
         Intent intent = getIntent();
         currentProject = (Result) intent.getSerializableExtra("current_project");
 
         if(name == null || email==null) {
-            Bundle b = intent.getBundleExtra("userInfo");
-            host = b.getString("host");
-            name = b.getString("name");
-            email = b.getString("email");
-            password = b.getString("password");
+            userInfo = intent.getBundleExtra("userInfo");
+            host = userInfo.getString("host");
+            name = userInfo.getString("name");
+            email = userInfo.getString("email");
+            password = userInfo.getString("password");
         }
 
 
@@ -291,7 +296,8 @@ public class MainActivity extends AppCompatActivity
                 if(projectList.size() != 0) {
                     switch (position % 4) {
                         case 0:
-                            return RecyclerViewFragment.newInstance();
+                            userInfo.putInt("project_id", currentProject.getId());
+                            return BookmarksFragment.newInstance(userInfo);
                         //case 1:
                         //    return RecyclerViewFragment.newInstance();
                         //case 2:

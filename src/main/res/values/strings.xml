@@ -2,7 +2,7 @@
     <string name="app_name">Coagmento</string>
 
 
-    <string name="server_base_url">http://172.31.255.32:8000</string>
+    <string name="server_base_url">http://10.0.2.2:8000</string>
 
 
     <string name="title_activity_login">Sign In</string>
