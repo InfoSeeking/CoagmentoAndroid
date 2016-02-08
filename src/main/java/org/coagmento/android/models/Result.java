@@ -25,6 +25,34 @@ public class Result implements Serializable {
     private String description;
     private Integer creator_id;
     private Object deleted_at;
+    private String url;
+    private String notes;
+    private Thumbnail thumbnail;
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Thumbnail getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Thumbnail thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
     @SerializedName("private") private Integer _private;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

@@ -257,7 +257,29 @@ public class MainActivity extends AppCompatActivity
             }
         } else {
             toolbarTitleView.setText(R.string.no_projects_found);
-
+//            toolbar.setVisibility(View.GONE);
+//
+//            //Load Blank Fragment
+//
+//            // Check that the activity is using the layout version with
+//            // the fragment_container FrameLayout
+//            if (findViewById(R.id.fragment_container) != null) {
+//
+//                // However, if we're being restored from a previous state,
+//                // then we don't need to do anything and should return or else
+//                // we could end up with overlapping fragments.
+//
+//                // Create a new Fragment to be placed in the activity layout
+//                MainFragment firstFragment = new MainFragment();
+//
+//                // In case this activity was started with special instructions from an
+//                // Intent, pass the Intent's extras to the fragment as arguments
+//                firstFragment.setArguments(getIntent().getExtras());
+//
+//                // Add the fragment to the 'fragment_container' FrameLayout
+//                getSupportFragmentManager().beginTransaction()
+//                        .add(R.id.fragment_container, firstFragment).commit();
+//            }
         }
 
         // Set ViewPager
@@ -266,15 +288,19 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public Fragment getItem(int position) {
-                switch (position % 4) {
-                    //case 0:
-                    //    return RecyclerViewFragment.newInstance();
-                    //case 1:
-                    //    return RecyclerViewFragment.newInstance();
-                    //case 2:
-                    //    return WebViewFragment.newInstance();
-                    default:
-                        return RecyclerViewFragment.newInstance();
+                if(projectList.size() != 0) {
+                    switch (position % 4) {
+                        case 0:
+                            return RecyclerViewFragment.newInstance();
+                        //case 1:
+                        //    return RecyclerViewFragment.newInstance();
+                        //case 2:
+                        //    return WebViewFragment.newInstance();
+                        default:
+                            return RecyclerViewFragment.newInstance();
+                    }
+                } else {
+                    return MainFragment.newInstance();
                 }
             }
 
@@ -339,28 +365,6 @@ public class MainActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "Yes, the title is clickable", Toast.LENGTH_SHORT).show();
                 }
             });
-
-//        //Load Main Fragment
-//
-//        // Check that the activity is using the layout version with
-//        // the fragment_container FrameLayout
-//        if (findViewById(R.id.fragment_container) != null) {
-//
-//            // However, if we're being restored from a previous state,
-//            // then we don't need to do anything and should return or else
-//            // we could end up with overlapping fragments.
-//
-//            // Create a new Fragment to be placed in the activity layout
-//            MainFragment firstFragment = new MainFragment();
-//
-//            // In case this activity was started with special instructions from an
-//            // Intent, pass the Intent's extras to the fragment as arguments
-//            firstFragment.setArguments(getIntent().getExtras());
-//
-//            // Add the fragment to the 'fragment_container' FrameLayout
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.fragment_container, firstFragment).commit();
-//        }
 
     }
 
@@ -437,7 +441,7 @@ public class MainActivity extends AppCompatActivity
             item.setChecked(true);
             currentProject = menuItemHashMap.get(item);
             previousItem = item;
-            toolbar.setTitle(currentProject.getTitle());
+            toolbarTitleView.setText(currentProject.getTitle());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -484,7 +488,7 @@ public class MainActivity extends AppCompatActivity
     protected void loadFirstProject() {
         previousItem = navigationView.getMenu().getItem(1).getSubMenu().getItem(0);
         previousItem.setChecked(true);
-        toolbar.setTitle(previousItem.getTitle());
+        toolbarTitleView.setText(previousItem.getTitle());
         currentProject = menuItemHashMap.get(previousItem);
     }
 
