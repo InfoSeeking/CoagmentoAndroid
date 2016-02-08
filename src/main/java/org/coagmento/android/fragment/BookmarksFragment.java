@@ -39,6 +39,7 @@ public class BookmarksFragment extends Fragment {
 
     private String host, email, password;
     private int project_id;
+    private Bundle userInfo;
 
     private int ITEM_COUNT = 0;
     private List<Result> bookmarks = new ArrayList<>();
@@ -51,7 +52,7 @@ public class BookmarksFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Bundle userInfo = getArguments();
+        userInfo = getArguments();
 
         host = userInfo.getString("host");
         email = userInfo.getString("email");
@@ -99,7 +100,7 @@ public class BookmarksFragment extends Fragment {
     }
 
     protected void loadList() {
-        mAdapter = new RecyclerViewMaterialAdapter(new BookmarksRecyclerViewAdapter(bookmarks));
+        mAdapter = new RecyclerViewMaterialAdapter(new BookmarksRecyclerViewAdapter(bookmarks, userInfo));
         mRecyclerView.setAdapter(mAdapter);
 //
 //        {

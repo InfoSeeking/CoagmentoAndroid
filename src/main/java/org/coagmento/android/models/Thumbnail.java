@@ -9,8 +9,8 @@ import javax.annotation.Generated;
 public class Thumbnail {
 
     private String id;
-    private String imageSmall;
-    private String imageLarge;
+    private String image_small;
+    private String image_large;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
@@ -37,7 +37,7 @@ public class Thumbnail {
      *     The imageSmall
      */
     public String getImageSmall() {
-        return imageSmall;
+        return image_small;
     }
 
     /**
@@ -46,7 +46,7 @@ public class Thumbnail {
      *     The image_small
      */
     public void setImageSmall(String imageSmall) {
-        this.imageSmall = imageSmall;
+        this.image_small = imageSmall;
     }
 
     /**
@@ -55,7 +55,7 @@ public class Thumbnail {
      *     The imageLarge
      */
     public String getImageLarge() {
-        return imageLarge;
+        return image_large;
     }
 
     /**
@@ -64,7 +64,7 @@ public class Thumbnail {
      *     The image_large
      */
     public void setImageLarge(String imageLarge) {
-        this.imageLarge = imageLarge;
+        this.image_large = imageLarge;
     }
 
     public Map<String, Object> getAdditionalProperties() {
