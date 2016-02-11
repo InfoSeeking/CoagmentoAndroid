@@ -23,6 +23,7 @@ android {
 repositories {
     maven {
         url 'http://dl.bintray.com/amulyakhare/maven'
+        url "https://jitpack.io"
     }
 }
 

@@ -2,8 +2,11 @@ package org.coagmento.android.adapter;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -68,6 +71,7 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<Bookmarks
                 .into(holder.thumbnail);
 
         holder.title.setText(holder.bookmarkItem.getTitle());
+
         holder.url.setText(holder.bookmarkItem.getUrl());
         holder.notes.setText(holder.bookmarkItem.getNotes());
     }
@@ -79,7 +83,7 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<Bookmarks
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final ImageView thumbnail;
+        public final ImageView thumbnail, overflowMenu;
         public final TextView title;
         public final TextView url;
         private final TextView notes;
@@ -92,7 +96,11 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<Bookmarks
             title = (TextView) view.findViewById(R.id.big_title);
             url = (TextView) view.findViewById(R.id.big_url);
             notes = (TextView) view.findViewById(R.id.big_notes);
-        }
+            overflowMenu = (ImageView) view.findViewById(R.id.album_overflow);
 
+            PopupMenu popup = new PopupMenu(overflowMenu.getContext(), overflowMenu);
+            MenuInflater inflater = popup.getMenuInflater();
+            inflater.inflate(R.menu.bookmarks_menu, popup.getMenu());
+        }
     }
 }

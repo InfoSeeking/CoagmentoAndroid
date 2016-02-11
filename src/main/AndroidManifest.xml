@@ -29,7 +29,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/ViewpagerTheme" />
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register" />

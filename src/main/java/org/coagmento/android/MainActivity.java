@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBar;
@@ -22,6 +24,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.squareup.okhttp.ResponseBody;
@@ -337,8 +340,8 @@ public class MainActivity extends AppCompatActivity
                 switch (page) {
                     case 0:
                         return HeaderDesign.fromColorResAndUrl(
-                                R.color.green,
-                                "http://www.theblogboutique.com/wp-content/uploads/2009/07/simply-a-fern-on-green-background-free-header-art.jpg");
+                                R.color.yellow,
+                                "http://wallpaperlayer.com/img/2015/9/orange-gradient-wallpaper-1448-1581-hd-wallpapers.jpg");
                     case 1:
                         return HeaderDesign.fromColorResAndUrl(
                                 R.color.blue,

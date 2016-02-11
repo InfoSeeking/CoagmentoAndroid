@@ -2,6 +2,7 @@ package org.coagmento.android.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +16,6 @@ import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapte
 
 import org.coagmento.android.R;
 import org.coagmento.android.adapter.BookmarksRecyclerViewAdapter;
-import org.coagmento.android.adapter.TestRecyclerViewAdapter;
 import org.coagmento.android.data.EndpointsInterface;
 import org.coagmento.android.models.BookmarksListResponse;
 import org.coagmento.android.models.Result;
@@ -87,13 +87,13 @@ public class BookmarksFragment extends Fragment {
             }
         });
 
-        return inflater.inflate(R.layout.fragment_recyclerview, container, false);
+        return inflater.inflate(R.layout.fragment_bookmarks, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.bookmarks_recyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
