@@ -78,15 +78,6 @@
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
-
-            <android.support.v7.widget.AppCompatCheckBox
-                android:id="@+id/save_login_checkbox"
-                android:onClick="onCheckboxClicked"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/action_keep_me_signed_in"
-                android:layout_marginTop="5dp"/>
-
             <Button
                 android:id="@+id/email_sign_in_button"
                 style="?android:textAppearanceSmall"

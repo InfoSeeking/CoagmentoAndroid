@@ -6,13 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.design.widget.NavigationView;
@@ -25,11 +23,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.okhttp.ResponseBody;
 import org.coagmento.android.data.EndpointsInterface;
 import org.coagmento.android.fragment.BookmarksFragment;
 import org.coagmento.android.fragment.MainFragment;
-import org.coagmento.android.fragment.RecyclerViewFragment;
+
 import org.coagmento.android.models.Errors;
 import org.coagmento.android.models.ProjectListResponse;
 import org.coagmento.android.models.Result;
@@ -53,10 +54,9 @@ public class MainActivity extends AppCompatActivity
     private TextView mHeaderEmailView;
     private AlertDialog alertDialog;
     private ProgressDialog progressDialog;
+    private FloatingActionsMenu floatingActionButton;
 
     // Menu References
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
     private Toolbar toolbar;
     private MenuItem previousItem;
     private NavigationView navigationView;
@@ -184,6 +184,9 @@ public class MainActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Find the floating action button
+        floatingActionButton = (FloatingActionsMenu) findViewById(R.id.fab);
+
         // Set User Name and Email in navigation header
         mHeaderNameView = (TextView) findViewById(R.id.navview_header_name);
         mHeaderNameView.setText(name);
@@ -260,6 +263,7 @@ public class MainActivity extends AppCompatActivity
 
         if(projectList.size() == 0) {
             tabLayout.setVisibility(View.GONE);
+            floatingActionButton.setVisibility(View.GONE);
         }
 
     }

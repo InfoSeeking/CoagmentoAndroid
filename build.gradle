@@ -23,7 +23,6 @@ android {
 repositories {
     maven {
         url 'http://dl.bintray.com/amulyakhare/maven'
-        url "https://jitpack.io"
     }
 }
 
@@ -47,6 +46,6 @@ dependencies {
     compile 'org.solovyev.android.views:linear-layout-manager:0.5@aar'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.getbase:floatingactionbutton:1.10.1'
+    compile 'com.android.support:customtabs:23.1.1'
 }

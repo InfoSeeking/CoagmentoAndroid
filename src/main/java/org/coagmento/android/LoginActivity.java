@@ -65,7 +65,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mLoginFormView;
     private AlertDialog alertDialog;
 
-    private Boolean saveLogin = false;
     private Bundle userInfo = new Bundle();
 
     @Override
@@ -236,14 +235,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                  responseStatus = true;
                                  String response_name = userResponse.getResult().getUser().getName();
                                  String response_email = userResponse.getResult().getUser().getEmail();
-                                 if(saveLogin) {
-                                     saveCredentials(BASE_URL, response_name, response_email, password);
-                                 } else {
-                                     userInfo.putString("host", BASE_URL);
-                                     userInfo.putString("name", response_name);
-                                     userInfo.putString("email", response_email);
-                                     userInfo.putString("password", password);
-                                 }
+                                 saveCredentials(BASE_URL, response_name, response_email, password);
                              }
                          }
                          showProgress(false);
@@ -368,28 +360,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
-    public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        boolean checked = ((CheckBox) view).isChecked();
-
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.save_login_checkbox:
-                if (checked) {
-                    saveLogin = true;
-                } else {
-                    saveLogin = false;
-                }
-                break;
-        }
-    }
-
     private void checkCredentials(boolean responseStatus) {
 
 
         if(responseStatus) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            if(!saveLogin) intent.putExtra("userInfo", userInfo);
             startActivity(intent);
             finish();
 

@@ -1,20 +1,27 @@
 package org.coagmento.android.fragment;
 
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import org.coagmento.android.R;
+import org.coagmento.android.RecyclerItemClickListener;
 import org.coagmento.android.adapter.BookmarksRecyclerViewAdapter;
 import org.coagmento.android.data.EndpointsInterface;
 import org.coagmento.android.models.BookmarksListResponse;
+import org.coagmento.android.models.DeleteBookmarkResponse;
 import org.coagmento.android.models.Result;
 
 import java.util.ArrayList;
@@ -100,5 +107,48 @@ public class BookmarksFragment extends Fragment {
     protected void loadList() {
         mAdapter = new BookmarksRecyclerViewAdapter(bookmarks, userInfo);
         mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                String url = bookmarks.get(position).getUrl();
+                Uri uri = Uri.parse(url);
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                builder.setToolbarColor(getResources().getColor(R.color.colorPrimaryDark));
+                CustomTabsIntent customTabsIntent = builder.build();
+                customTabsIntent.launchUrl(getActivity(), uri);
+            }
+        }));
+
+//        switch (item.getItemId()) {
+//            case R.id.bookmarks_edit:
+//                break;
+//            case R.id.bookmars_remove:
+//                // Fetch Project Titles, Id's and Ownership
+//                Retrofit retrofit = new Retrofit.Builder()
+//                        .baseUrl(host)
+//                        .addConverterFactory(GsonConverterFactory.create())
+//                        .build();
+//
+//                EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
+//
+//                Call<DeleteBookmarkResponse> call = apiService.deleteBookmark(holder.bookmarkItem.getId(), email, password);
+//
+//                call.enqueue(new Callback<DeleteBookmarkResponse>() {
+//                    @Override
+//                    public void onResponse(Response<DeleteBookmarkResponse> response, Retrofit retrofit) {
+//                        if(response.code() == 200) {
+//
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Throwable t) {
+//
+//                    }
+//                });
+//                break;
+//        }
+//        return false;
     }
 }

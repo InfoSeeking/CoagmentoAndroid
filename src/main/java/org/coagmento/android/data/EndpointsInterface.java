@@ -1,6 +1,7 @@
 package org.coagmento.android.data;
 
 import org.coagmento.android.models.BookmarksListResponse;
+import org.coagmento.android.models.DeleteBookmarkResponse;
 import org.coagmento.android.models.NullResponse;
 import org.coagmento.android.models.ProjectListResponse;
 import org.coagmento.android.models.ProjectResponse;
@@ -92,9 +93,17 @@ public interface EndpointsInterface {
     @PUT("/api/v1/projects/{id}")
     Call<NullResponse> updateProjectTitle(@Path("id") int id, @Query("title") String newTitle, @Query("auth_email") String email, @Query("auth_password") String password);
 
+    /*
+     * BOOKMARKS
+     */
+
     // Bookmarks - Get Multiple
     @GET("/api/v1/bookmarks")
     Call<BookmarksListResponse> getBookmarks(@Query("project_id") int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    //Bookmarks - Delete
+    @DELETE("/api/v1/bookmarks/{id}")
+    Call<DeleteBookmarkResponse> deleteBookmark(@Path("id") int bookmark_id, @Query("auth_email") String email, @Query("auth_password") String password);
 
 
 }

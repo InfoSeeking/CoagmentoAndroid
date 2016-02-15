@@ -6,6 +6,11 @@
         android:title="@string/edit" />
 
     <item
+        android:id="@+id/bookmars_move"
+        android:icon="@drawable/ic_delete_grey600_18dp"
+        android:title="@string/move"/>
+
+    <item
         android:id="@+id/bookmars_remove"
         android:icon="@drawable/ic_delete_grey600_18dp"
         android:title="@string/delete"/>
