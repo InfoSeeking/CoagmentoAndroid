@@ -1,11 +1,14 @@
 package org.coagmento.android;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -20,6 +23,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import com.squareup.okhttp.ResponseBody;
 import org.coagmento.android.data.EndpointsInterface;
@@ -96,7 +100,6 @@ public class MainActivity extends AppCompatActivity
             password = userInfo.getString("password");
         }
 
-
         updateProjectList();
     }
 
@@ -168,6 +171,13 @@ public class MainActivity extends AppCompatActivity
         );
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_settings).setVisible(!(projectList.size() == 0));
+        return true;
+    }
+
     protected void initializeUI() {
 
         // Set tabs on toolbar
@@ -196,7 +206,6 @@ public class MainActivity extends AppCompatActivity
 
         myProjectList = sortProjects(projectList, false);
         sharedProjectList = sortProjects(projectList, true);
-
 
         navigationView.inflateMenu(R.menu.activity_main_drawer);
         Menu menu = navigationView.getMenu();
@@ -237,37 +246,21 @@ public class MainActivity extends AppCompatActivity
             }
         } else {
             toolbar.setTitle(R.string.no_projects_found);
-//            toolbar.setVisibility(View.GONE);
-//
-//            //Load Blank Fragment
-//
-//            // Check that the activity is using the layout version with
-//            // the fragment_container FrameLayout
-//            if (findViewById(R.id.fragment_container) != null) {
-//
-//                // However, if we're being restored from a previous state,
-//                // then we don't need to do anything and should return or else
-//                // we could end up with overlapping fragments.
-//
-//                // Create a new Fragment to be placed in the activity layout
-//                MainFragment firstFragment = new MainFragment();
-//
-//                // In case this activity was started with special instructions from an
-//                // Intent, pass the Intent's extras to the fragment as arguments
-//                firstFragment.setArguments(getIntent().getExtras());
-//
-//                // Add the fragment to the 'fragment_container' FrameLayout
-//                getSupportFragmentManager().beginTransaction()
-//                        .add(R.id.fragment_container, firstFragment).commit();
-//            }
         }
 
         // Set ViewPager
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(),
+                MainActivity.this));
 
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(mViewPager.getAdapter().getCount());
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        if(projectList.size() == 0) {
+            tabLayout.setVisibility(View.GONE);
+        }
 
     }
 
@@ -356,8 +349,6 @@ public class MainActivity extends AppCompatActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
 
-
-
     }
 
     private List<Result> sortProjects(List<Result> result, boolean sharedQuery) {
@@ -402,39 +393,39 @@ public class MainActivity extends AppCompatActivity
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
+        final int PAGE_COUNT = 5;
+        private String tabTitles[] = new String[]{"Bookmarks", "Pages", "Snippets", "Documents", "Chat"};
+        private Context context;
 
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            userInfo.putInt("project_id", currentProject.getId());
-            return BookmarksFragment.newInstance(userInfo);
+        public SectionsPagerAdapter(FragmentManager fm, Context context) {
+            super(fm);
+            this.context = context;
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 5;
+            return PAGE_COUNT;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if (projectList.size() != 0) {
+                userInfo.putInt("project_id", currentProject.getId());
+                switch(position) {
+                    case 0:
+                        return BookmarksFragment.newInstance(userInfo);
+                    default:
+                        return BookmarksFragment.newInstance(userInfo);
+                }
+            } else {
+                return MainFragment.newInstance();
+            }
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Bookmarks";
-                case 1:
-                    return "Pages";
-                case 2:
-                    return "Snippets";
-                case 3:
-                    return "Documents";
-                case 4:
-                    return "Chat";
-            }
-            return null;
+            // Generate title based on item position
+            return tabTitles[position];
         }
     }
 }

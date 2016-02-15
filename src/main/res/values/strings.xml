@@ -70,7 +70,7 @@
     <string name="main_fragment_pages">Pages</string>
     <string name="main_fragment_documents">Documents</string>
     <string name="main_fragment_snippets">Snippets</string>
-    <string name="prompt_no_projects_found">No projects were found under your account. \n\nPlease create a project to start using Coagmento.</string>
+    <string name="prompt_no_projects_found">No projects were found under your account. \n\nPlease open the navigation drawer and create a project to start using Coagmento.</string>
     <string name="no_projects_found">No Projects Found</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
