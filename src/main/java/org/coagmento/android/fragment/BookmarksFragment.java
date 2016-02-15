@@ -11,9 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
-
 import org.coagmento.android.R;
 import org.coagmento.android.adapter.BookmarksRecyclerViewAdapter;
 import org.coagmento.android.data.EndpointsInterface;
@@ -40,6 +37,7 @@ public class BookmarksFragment extends Fragment {
     private String host, email, password;
     private int project_id;
     private Bundle userInfo;
+
 
     private int ITEM_COUNT = 0;
     private List<Result> bookmarks = new ArrayList<>();
@@ -100,15 +98,7 @@ public class BookmarksFragment extends Fragment {
     }
 
     protected void loadList() {
-        mAdapter = new RecyclerViewMaterialAdapter(new BookmarksRecyclerViewAdapter(bookmarks, userInfo));
+        mAdapter = new BookmarksRecyclerViewAdapter(bookmarks, userInfo);
         mRecyclerView.setAdapter(mAdapter);
-//
-//        {
-//            for (int i = 0; i < ITEM_COUNT; ++i)
-//                bookmarks.add(new Result());
-//            mAdapter.notifyDataSetChanged();
-//        }
-
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 }

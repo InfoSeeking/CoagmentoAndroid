@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v7.app.ActionBar;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,15 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.github.florent37.materialviewpager.MaterialViewPager;
-import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.squareup.okhttp.ResponseBody;
-
 import org.coagmento.android.data.EndpointsInterface;
 import org.coagmento.android.fragment.BookmarksFragment;
 import org.coagmento.android.fragment.MainFragment;
@@ -36,13 +29,11 @@ import org.coagmento.android.fragment.RecyclerViewFragment;
 import org.coagmento.android.models.Errors;
 import org.coagmento.android.models.ProjectListResponse;
 import org.coagmento.android.models.Result;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Converter;
@@ -56,12 +47,12 @@ public class MainActivity extends AppCompatActivity
     //UI References
     private TextView mHeaderNameView;
     private TextView mHeaderEmailView;
-    private TextView toolbarTitleView;
     private AlertDialog alertDialog;
     private ProgressDialog progressDialog;
 
     // Menu References
-    private MaterialViewPager mViewPager;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
     private Toolbar toolbar;
     private MenuItem previousItem;
     private NavigationView navigationView;
@@ -178,27 +169,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void initializeUI() {
-//        toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
 
         // Set tabs on toolbar
-        mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
-
-        toolbar = mViewPager.getToolbar();
-        toolbar.setTitle("");
-
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-
-            final ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                actionBar.setDisplayShowHomeEnabled(true);
-                actionBar.setDisplayShowTitleEnabled(true);
-                actionBar.setDisplayUseLogoEnabled(false);
-                actionBar.setHomeButtonEnabled(true);
-            }
-        }
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Set User Name and Email in navigation header
         mHeaderNameView = (TextView) findViewById(R.id.navview_header_name);
@@ -247,8 +221,6 @@ public class MainActivity extends AppCompatActivity
         MenuItem mi = menu.getItem(menu.size() - 1);
         mi.setTitle(mi.getTitle());
 
-        toolbarTitleView = (TextView) findViewById(R.id.logo_white);
-
         if(projectList.size() != 0) {
             //Initialize the navigation view withe first project
             if (currentProject != null) {
@@ -256,7 +228,7 @@ public class MainActivity extends AppCompatActivity
                 if (previousItem != null) {
                     currentProject = menuItemHashMap.get(previousItem);
                     previousItem.setChecked(true);
-                    toolbarTitleView.setText(previousItem.getTitle());
+                    toolbar.setTitle(previousItem.getTitle());
                 } else {
                     loadFirstProject();
                 }
@@ -264,7 +236,7 @@ public class MainActivity extends AppCompatActivity
                 loadFirstProject();
             }
         } else {
-            toolbarTitleView.setText(R.string.no_projects_found);
+            toolbar.setTitle(R.string.no_projects_found);
 //            toolbar.setVisibility(View.GONE);
 //
 //            //Load Blank Fragment
@@ -291,89 +263,11 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Set ViewPager
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager = (ViewPager) findViewById(R.id.pager);
 
-        mViewPager.getViewPager().setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
-
-            @Override
-            public Fragment getItem(int position) {
-                if(projectList.size() != 0) {
-                    switch (position % 4) {
-                        case 0:
-                            userInfo.putInt("project_id", currentProject.getId());
-                            return BookmarksFragment.newInstance(userInfo);
-                        //case 1:
-                        //    return RecyclerViewFragment.newInstance();
-                        //case 2:
-                        //    return WebViewFragment.newInstance();
-                        default:
-                            return RecyclerViewFragment.newInstance();
-                    }
-                } else {
-                    return MainFragment.newInstance();
-                }
-            }
-
-            @Override
-            public int getCount() {
-                return 4;
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                switch (position % 4) {
-                    case 0:
-                        return "Bookmarks";
-                    case 1:
-                        return "Pages";
-                    case 2:
-                        return "Snippets";
-                    case 3:
-                        return "Documents";
-                }
-                return "";
-            }
-        });
-
-        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
-            @Override
-            public HeaderDesign getHeaderDesign(int page) {
-                switch (page) {
-                    case 0:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.yellow,
-                                "http://wallpaperlayer.com/img/2015/9/orange-gradient-wallpaper-1448-1581-hd-wallpapers.jpg");
-                    case 1:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.blue,
-                                "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
-                    case 2:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.cyan,
-                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
-                    case 3:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.red,
-                                "http://www.tothemobile.com/wp-content/uploads/2014/07/original.jpg");
-                }
-
-                //execute others actions if needed (ex : modify your header logo)
-
-                return null;
-            }
-        });
-
-        mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
-        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
-
-        View logo = findViewById(R.id.logo_white);
-        if (logo != null)
-            logo.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mViewPager.notifyHeaderChanged();
-                    Toast.makeText(getApplicationContext(), "Yes, the title is clickable", Toast.LENGTH_SHORT).show();
-                }
-            });
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(mViewPager.getAdapter().getCount());
 
     }
 
@@ -450,7 +344,7 @@ public class MainActivity extends AppCompatActivity
             item.setChecked(true);
             currentProject = menuItemHashMap.get(item);
             previousItem = item;
-            toolbarTitleView.setText(currentProject.getTitle());
+            toolbar.setTitle(currentProject.getTitle());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -497,12 +391,50 @@ public class MainActivity extends AppCompatActivity
     protected void loadFirstProject() {
         previousItem = navigationView.getMenu().getItem(1).getSubMenu().getItem(0);
         previousItem.setChecked(true);
-        toolbarTitleView.setText(previousItem.getTitle());
+        toolbar.setTitle(previousItem.getTitle());
         currentProject = menuItemHashMap.get(previousItem);
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            // getItem is called to instantiate the fragment for the given page.
+            // Return a PlaceholderFragment (defined as a static inner class below).
+            userInfo.putInt("project_id", currentProject.getId());
+            return BookmarksFragment.newInstance(userInfo);
+        }
+
+        @Override
+        public int getCount() {
+            // Show 3 total pages.
+            return 5;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Bookmarks";
+                case 1:
+                    return "Pages";
+                case 2:
+                    return "Snippets";
+                case 3:
+                    return "Documents";
+                case 4:
+                    return "Chat";
+            }
+            return null;
+        }
     }
 }

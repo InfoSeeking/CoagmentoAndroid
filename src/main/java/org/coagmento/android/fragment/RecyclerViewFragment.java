@@ -8,9 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
-import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 import org.coagmento.android.R;
 import org.coagmento.android.adapter.TestRecyclerViewAdapter;
 
@@ -46,7 +43,7 @@ public class RecyclerViewFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        mAdapter = new RecyclerViewMaterialAdapter(new TestRecyclerViewAdapter(mContentItems));
+        mAdapter = new TestRecyclerViewAdapter(mContentItems);
         mRecyclerView.setAdapter(mAdapter);
 
         {
@@ -55,6 +52,5 @@ public class RecyclerViewFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
 
-        MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
 }

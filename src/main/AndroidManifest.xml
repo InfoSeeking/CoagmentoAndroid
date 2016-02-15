@@ -29,12 +29,12 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/ViewpagerTheme" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register" />
         <activity android:name=".NewProjectActivity" />
-        <activity android:name=".EditProject"></activity>
+        <activity android:name=".EditProject" />
     </application>
 
 </manifest>
