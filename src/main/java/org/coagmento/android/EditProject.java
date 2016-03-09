@@ -3,6 +3,7 @@ package org.coagmento.android;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,18 +15,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.coagmento.android.adapter.ProjectUsersAdapter;
 import org.coagmento.android.data.EndpointsInterface;
 import org.coagmento.android.models.NullResponse;
 import org.coagmento.android.models.ProjectResponse;
 import org.coagmento.android.models.Result;
+import org.coagmento.android.models.User;
 import org.coagmento.android.models.UserListResponse;
 import org.coagmento.android.models.UserResponse;
 import org.solovyev.android.views.llm.DividerItemDecoration;
 import org.solovyev.android.views.llm.LinearLayoutManager;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,10 +65,12 @@ public class EditProject extends AppCompatActivity {
     private EndpointsInterface apiService;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_project);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         // Set Action Bar
         getSupportActionBar().setTitle("Edit Project");
@@ -141,7 +148,45 @@ public class EditProject extends AppCompatActivity {
         addPersonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                final AlertDialog alertDialog = new AlertDialog.Builder(EditProject.this).create();
+                alertDialog.setTitle("Feature to be added.");
+//                final LinearLayout input = (LinearLayout) getLayoutInflater().inflate(R.layout.edit_title_textview, null);
+//                final EditText editText = (EditText) input.findViewById(R.id.edit_title_view);
+//                editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+//                alertDialog.setView(input);
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        String new_email = editText.getText().toString();
+//                        if (new_email.contains("@")) {
+//                            if (isValidUser(editText.getText().toString())) {
+//                                Toast.makeText(getApplicationContext(), "Email Valid", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                AlertDialog alertDialog2 = new AlertDialog.Builder(EditProject.this).create();
+//                                alertDialog2.setTitle("User Does Not Exist");
+//                                alertDialog2.setMessage("User does not exist in the Coagmento database. Please ask them to register and then try adding them to the project.");
+//                                alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                                        new DialogInterface.OnClickListener() {
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                dialog.dismiss();
+//                                            }
+//                                        });
+//                                alertDialog2.show();
+//                                dialog.dismiss();
+//                            }
+//                        } else {
+//                            editText.setError("Please enter a valid user email");
+//                        }
+                        dialog.dismiss();
+                    }
+                });
+//                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+                alertDialog.show();
             }
         });
 
@@ -338,5 +383,28 @@ public class EditProject extends AppCompatActivity {
         startActivity(intent);
         overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
         finish();
+    }
+
+    public boolean isValidUser(String new_email) {
+        Call<UserResponse> call = apiService.getUser(new_email);
+
+        //TODO: Ask Kevin to add an endpoint to check user by email, and not just the ID
+
+//        try {
+//            UserResponse response = call.execute().body();
+//            if(response != null) {
+//                Result user = response.getResult();
+//                if(user.getEmail() != null && user.getEmail().contains("@")) {
+//                    return true;
+//                }
+//            } else {
+//                return false;
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+
+        return false;
     }
 }

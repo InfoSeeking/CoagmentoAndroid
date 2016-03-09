@@ -145,23 +145,14 @@ public class BookmarksFragment extends Fragment implements BookmarksRecyclerView
     public boolean onItemLongClicked(int position) {
 
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
-        builderSingle.setTitle("Options:");
+        builderSingle.setTitle(bookmarks.get(position).getTitle());
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 getContext(),
-                android.R.layout.simple_selectable_list_item);
+                R.layout.dialog_selectable_list);
         arrayAdapter.add("Edit Bookmark");
         arrayAdapter.add("Move to another project");
         arrayAdapter.add("Delete Bookmark");
-
-        builderSingle.setNegativeButton(
-                "cancel",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
 
         builderSingle.setAdapter(
                 arrayAdapter,

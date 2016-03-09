@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,9 +23,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.okhttp.ResponseBody;
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity
     private TextView mHeaderEmailView;
     private AlertDialog alertDialog;
     private ProgressDialog progressDialog;
+    private ImageView userAvatarView;
 
     // Menu References
     private Toolbar toolbar;
@@ -191,6 +196,15 @@ public class MainActivity extends AppCompatActivity
         floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.fab);
 
         // Set User Name and Email in navigation header
+        userAvatarView = (ImageView) findViewById(R.id.userAvatarView);
+        TextDrawable userAvatar = TextDrawable.builder()
+                .beginConfig()
+                .width(150)
+                .height(150)
+                .endConfig()
+                .buildRound(String.valueOf(name.charAt(0)), R.color.white);
+        userAvatarView.setImageDrawable(userAvatar);
+
         mHeaderNameView = (TextView) findViewById(R.id.navview_header_name);
         mHeaderNameView.setText(name);
 
@@ -263,6 +277,59 @@ public class MainActivity extends AppCompatActivity
         // Give the TabLayout the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                switch (position) {
+                    case 0:
+                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+                        break;
+                    case 4:
+                        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                        break;
+                    case 2:
+                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
+                        break;
+                    case 3:
+                        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+                        break;
+                    case 4:
+                        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         if(projectList.size() == 0) {
             tabLayout.setVisibility(View.GONE);
@@ -350,9 +417,11 @@ public class MainActivity extends AppCompatActivity
             List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
             if(fragmentList != null) {
                 for (Fragment fragment : fragmentList) {
-                    if(fragment.getTag() == new BookmarksFragment().getTag()) {
+                    if(fragment instanceof BookmarksFragment) {
                         BookmarksFragment bookmarksFragment = (BookmarksFragment) fragment;
                         bookmarksFragment.loadList(currentProject.getProjectId());
+                    } else if(fragment instanceof ChatFragment) {
+                        Toast.makeText(getApplicationContext(), "switched fragment", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
