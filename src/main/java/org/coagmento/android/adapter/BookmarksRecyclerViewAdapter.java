@@ -1,7 +1,10 @@
 package org.coagmento.android.adapter;
 
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -43,13 +46,25 @@ import retrofit.http.Url;
  */
 public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<BookmarksRecyclerViewAdapter.ViewHolder> {
 
+    public interface OnItemClickListener {
+        public void onItemClicked(int position);
+    }
+
+    public interface OnItemLongClickListener {
+        public boolean onItemLongClicked(int position);
+    }
+
     List<Result> bookmarks;
     Bundle userInfo;
     String host, email, password;
+    OnItemClickListener onItemClickListener;
+    OnItemLongClickListener onItemLongClickListener;
 
-    public BookmarksRecyclerViewAdapter(List<Result> bookmarks, Bundle userInfo) {
+    public BookmarksRecyclerViewAdapter(List<Result> bookmarks, Bundle userInfo, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         this.bookmarks = bookmarks;
         this.userInfo = userInfo;
+        this.onItemClickListener = onItemClickListener;
+        this.onItemLongClickListener = onItemLongClickListener;
     }
 
     @Override
@@ -60,7 +75,7 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<Bookmarks
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.bookmarkItem = bookmarks.get(position);
 
         // Build Image URL
@@ -88,16 +103,21 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<Bookmarks
         holder.url.setText(holder.bookmarkItem.getUrl());
         holder.notes.setText(holder.bookmarkItem.getNotes());
 
-        holder.popup = new PopupMenu(holder.overflowMenu.getContext(), holder.overflowMenu);
-        final MenuInflater inflater = holder.popup.getMenuInflater();
-        inflater.inflate(R.menu.bookmarks_menu, holder.popup.getMenu());
-
-        holder.overflowMenu.setOnClickListener(new View.OnClickListener() {
+        holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.popup.show();
+                onItemClickListener.onItemClicked(position);
             }
         });
+
+        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                onItemLongClickListener.onItemLongClicked(position);
+                return false;
+            }
+        });
+
     }
 
     @Override
@@ -107,10 +127,9 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<Bookmarks
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final ImageView thumbnail, overflowMenu;
+        public final ImageView thumbnail;
         public final TextView title;
         public final TextView url;
-        public PopupMenu popup;
         public final TextView notes;
 
         public Result bookmarkItem;
@@ -122,7 +141,7 @@ public class BookmarksRecyclerViewAdapter extends RecyclerView.Adapter<Bookmarks
             title = (TextView) view.findViewById(R.id.big_title);
             url = (TextView) view.findViewById(R.id.big_url);
             notes = (TextView) view.findViewById(R.id.big_notes);
-            overflowMenu = (ImageView) view.findViewById(R.id.album_overflow);
         }
     }
+
 }

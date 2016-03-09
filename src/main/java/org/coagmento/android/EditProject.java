@@ -141,7 +141,7 @@ public class EditProject extends AppCompatActivity {
         addPersonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                
             }
         });
 

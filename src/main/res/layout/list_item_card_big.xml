@@ -8,7 +8,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/cardMarginVertical"
         android:layout_marginLeft="@dimen/cardMarginHorizontal"
         android:layout_marginRight="@dimen/cardMarginHorizontal"
@@ -27,7 +27,7 @@
                 android:id="@+id/big_thumbnail"
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
-                android:layout_height="275dp" />
+                android:layout_height="300dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,17 +50,6 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     />
-
-                <ImageView
-                    android:id="@+id/album_overflow"
-                    android:layout_width="34dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:padding="0dp"
-                    android:scaleType="center"
-                    android:clickable="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_menu_moreoverflow_material_dark" />
 
             </LinearLayout>
 

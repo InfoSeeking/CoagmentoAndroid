@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.TextView;
 
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.okhttp.ResponseBody;
 import org.coagmento.android.data.EndpointsInterface;
@@ -54,14 +55,16 @@ public class MainActivity extends AppCompatActivity
     private TextView mHeaderEmailView;
     private AlertDialog alertDialog;
     private ProgressDialog progressDialog;
-    private FloatingActionsMenu floatingActionButton;
 
     // Menu References
     private Toolbar toolbar;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
     private MenuItem previousItem;
     private NavigationView navigationView;
     private HashMap<MenuItem, Result> menuItemHashMap;
     private HashMap<Integer, MenuItem> projectIdHashMap;
+    private FloatingActionsMenu floatingActionsMenu;
 
     // User Data Variables
     private String host, email, password, name;
@@ -185,7 +188,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // Find the floating action button
-        floatingActionButton = (FloatingActionsMenu) findViewById(R.id.fab);
+        floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.fab);
 
         // Set User Name and Email in navigation header
         mHeaderNameView = (TextView) findViewById(R.id.navview_header_name);
@@ -253,17 +256,17 @@ public class MainActivity extends AppCompatActivity
 
         // Set ViewPager
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(),
                 MainActivity.this));
 
         // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         if(projectList.size() == 0) {
             tabLayout.setVisibility(View.GONE);
-            floatingActionButton.setVisibility(View.GONE);
+            floatingActionsMenu.setVisibility(View.GONE);
         }
 
     }
@@ -342,6 +345,17 @@ public class MainActivity extends AppCompatActivity
             currentProject = menuItemHashMap.get(item);
             previousItem = item;
             toolbar.setTitle(currentProject.getTitle());
+
+            // Refresh data in fragments when project is switched
+            List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+            if(fragmentList != null) {
+                for (Fragment fragment : fragmentList) {
+                    if(fragment.getTag() == new BookmarksFragment().getTag()) {
+                        BookmarksFragment bookmarksFragment = (BookmarksFragment) fragment;
+                        bookmarksFragment.loadList(currentProject.getProjectId());
+                    }
+                }
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -418,6 +432,14 @@ public class MainActivity extends AppCompatActivity
                 switch(position) {
                     case 0:
                         return BookmarksFragment.newInstance(userInfo);
+                    case 1:
+                        return BookmarksFragment.newInstance(userInfo);
+                    case 2:
+                        return BookmarksFragment.newInstance(userInfo);
+                    case 3:
+                        return BookmarksFragment.newInstance(userInfo);
+                    case 4:
+                        return ChatFragment.newInstance();
                     default:
                         return BookmarksFragment.newInstance(userInfo);
                 }
