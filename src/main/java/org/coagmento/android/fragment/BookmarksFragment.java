@@ -178,6 +178,9 @@ public class BookmarksFragment extends Fragment implements BookmarksRecyclerView
                                 List<Result> projects = bookmarksFragmentInteraction.getProjectList();
                                 moveBookmarkToProject(context, projects, position);
                                 break;
+                            case "Delete Bookmark":
+                                dialog.dismiss();
+                                deleteBookmark(bookmarks.get(position));
                             default:
                                 Snackbar snackbar = Snackbar
                                         .make(rootView, strName, Snackbar.LENGTH_LONG);
@@ -223,6 +226,7 @@ public class BookmarksFragment extends Fragment implements BookmarksRecyclerView
                             Snackbar snackbar = Snackbar
                                     .make(rootView, "Bookmark Moved.", Snackbar.LENGTH_SHORT);
                             snackbar.show();
+                            loadList(project_id);
                         } else {
                             Snackbar snackbar = Snackbar
                                     .make(rootView, "Error Code: " + response.code(), Snackbar.LENGTH_SHORT);
@@ -240,6 +244,40 @@ public class BookmarksFragment extends Fragment implements BookmarksRecyclerView
             }
         });
         projectsBuilder.show();
+    }
+
+    public void deleteBookmark(Result bookmark) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(host)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
+
+        Call<DeleteBookmarkResponse> call = apiService.deleteBookmark(bookmark.getId(), email, password);
+
+        call.enqueue(new Callback<DeleteBookmarkResponse>() {
+            @Override
+            public void onResponse(Response<DeleteBookmarkResponse> response, Retrofit retrofit) {
+                if(response.code() == 200) {
+                    Snackbar snackbar = Snackbar
+                            .make(rootView, "Bookmark Deleted.", Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                    loadList(project_id);
+                } else {
+                    Snackbar snackbar = Snackbar
+                            .make(rootView, "HTTP Error Code: " + response.code(), Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Snackbar snackbar = Snackbar
+                        .make(rootView, "Error: " + t.getMessage(), Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            }
+        });
     }
 
     public interface BookmarksFragmentInteraction extends Serializable {
