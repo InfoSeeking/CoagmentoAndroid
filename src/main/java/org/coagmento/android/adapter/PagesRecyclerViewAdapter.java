@@ -1,5 +1,6 @@
 package org.coagmento.android.adapter;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +36,7 @@ public class PagesRecyclerViewAdapter extends RecyclerView.Adapter<PagesRecycler
     OnItemClickListener onItemClickListener;
     OnItemLongClickListener onItemLongClickListener;
 
-    public PagesRecyclerViewAdapter(List<Result> bookmarks, Bundle userInfo, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
+    public PagesRecyclerViewAdapter(List<Result> pages, Bundle userInfo, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         this.bookmarks = bookmarks;
         this.userInfo = userInfo;
         this.onItemClickListener = onItemClickListener;
@@ -45,7 +46,7 @@ public class PagesRecyclerViewAdapter extends RecyclerView.Adapter<PagesRecycler
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_card_big, parent, false);
+                .inflate(android.R.layout.simple_list_item_1, parent, false);
         return new ViewHolder(view);
     }
 

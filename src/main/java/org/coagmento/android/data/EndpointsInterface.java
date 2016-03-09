@@ -105,5 +105,8 @@ public interface EndpointsInterface {
     @DELETE("/api/v1/bookmarks/{id}")
     Call<DeleteBookmarkResponse> deleteBookmark(@Path("id") int bookmark_id, @Query("auth_email") String email, @Query("auth_password") String password);
 
+    //Bookmarks - Move to Project
+    @PUT("/api/v1/bookmarks/{id}/move")
+    Call<NullResponse> moveProject(@Path("id") int bookmark_id, @Query("project_id")int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
 
 }

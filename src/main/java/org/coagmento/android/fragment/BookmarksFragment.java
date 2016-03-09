@@ -1,5 +1,6 @@
 package org.coagmento.android.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -28,8 +29,11 @@ import org.coagmento.android.adapter.BookmarksRecyclerViewAdapter;
 import org.coagmento.android.data.EndpointsInterface;
 import org.coagmento.android.models.BookmarksListResponse;
 import org.coagmento.android.models.DeleteBookmarkResponse;
+import org.coagmento.android.models.NullResponse;
 import org.coagmento.android.models.Result;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +56,10 @@ public class BookmarksFragment extends Fragment implements BookmarksRecyclerView
 
     private int ITEM_COUNT = 0;
     private List<Result> bookmarks = new ArrayList<>();
+    private BookmarksFragmentInteraction bookmarksFragmentInteraction;
 
-    public static BookmarksFragment newInstance(Bundle userInfo) {
-        BookmarksFragment fragment = new BookmarksFragment();
+    public static BookmarksFragment newInstance(Bundle userInfo, BookmarksFragmentInteraction bookmarksFragmentInteraction) {
+        BookmarksFragment fragment = new BookmarksFragment(bookmarksFragmentInteraction);
         fragment.setArguments(userInfo);
         return fragment;
     }
@@ -65,7 +70,6 @@ public class BookmarksFragment extends Fragment implements BookmarksRecyclerView
         rootView = inflater.inflate(R.layout.fragment_bookmarks, container, false);
         userInfo = getArguments();
 
-
         host = userInfo.getString("host");
         email = userInfo.getString("email");
         password = userInfo.getString("password");
@@ -74,6 +78,11 @@ public class BookmarksFragment extends Fragment implements BookmarksRecyclerView
         loadList(project_id);
 
         return rootView;
+    }
+
+    @SuppressLint("ValidFragment")
+    public BookmarksFragment(BookmarksFragmentInteraction bookmarksFragmentInteraction) {
+        this.bookmarksFragmentInteraction = bookmarksFragmentInteraction;
     }
 
     @Override
@@ -142,9 +151,11 @@ public class BookmarksFragment extends Fragment implements BookmarksRecyclerView
     }
 
     @Override
-    public boolean onItemLongClicked(int position) {
+    public boolean onItemLongClicked(final int position) {
 
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(getContext());
+        final Context context = getContext();
+
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(context);
         builderSingle.setTitle(bookmarks.get(position).getTitle());
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
@@ -160,13 +171,78 @@ public class BookmarksFragment extends Fragment implements BookmarksRecyclerView
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String strName = arrayAdapter.getItem(which);
-                        Snackbar snackbar = Snackbar
-                                .make(rootView, strName, Snackbar.LENGTH_LONG);
-                        snackbar.show();
+
+                        switch (strName) {
+                            case "Move to another project":
+                                dialog.dismiss();
+                                List<Result> projects = bookmarksFragmentInteraction.getProjectList();
+                                moveBookmarkToProject(context, projects, position);
+                                break;
+                            default:
+                                Snackbar snackbar = Snackbar
+                                        .make(rootView, strName, Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                break;
+                        }
+
+
                     }
                 });
         builderSingle.show();
 
         return false;
+    }
+
+    public void moveBookmarkToProject(Context context, final List<Result> projectList, final int bookmark_position) {
+        AlertDialog.Builder projectsBuilder = new AlertDialog.Builder(context);
+        projectsBuilder.setTitle("Select a project");
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                context,
+                R.layout.dialog_selectable_list);
+        for(int i=0; i<projectList.size();i++) {
+            if(projectList.get(i).getProjectId() != project_id) arrayAdapter.add(projectList.get(i).getTitle());
+        }
+        projectsBuilder.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(host)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
+
+                Call<NullResponse> call = apiService.moveProject(bookmarks.get(bookmark_position).getId(),
+                                                                    projectList.get(which).getProjectId(),
+                                                                        email, password);
+
+                call.enqueue(new Callback<NullResponse>() {
+                    @Override
+                    public void onResponse(Response<NullResponse> response, Retrofit retrofit) {
+                        if(response.code() == 200) {
+                            Snackbar snackbar = Snackbar
+                                    .make(rootView, "Bookmark Moved.", Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                        } else {
+                            Snackbar snackbar = Snackbar
+                                    .make(rootView, "Error Code: " + response.code(), Snackbar.LENGTH_SHORT);
+                            snackbar.show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Snackbar snackbar = Snackbar
+                                .make(rootView, "Error: " + t.getMessage(), Snackbar.LENGTH_SHORT);
+                        snackbar.show();
+                    }
+                });
+            }
+        });
+        projectsBuilder.show();
+    }
+
+    public interface BookmarksFragmentInteraction extends Serializable {
+        public List<Result> getProjectList();
     }
 }

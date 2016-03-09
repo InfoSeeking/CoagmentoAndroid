@@ -52,7 +52,8 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MainFragment.OnFragmentInteractionListener,
+                    BookmarksFragment.BookmarksFragmentInteraction {
 
     //UI References
     private TextView mHeaderNameView;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity
 
         // Fetch host, email, password, and names
         SharedPreferences prefs = getSharedPreferences("Login", 0);
-        host = prefs.getString("host", getString(R.string.server_base_url));
+        host = getString(R.string.server_base_url);
         name = prefs.getString("name", null);
         email = prefs.getString("email", null);
         password = prefs.getString("password", null);
@@ -478,6 +479,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public List<Result> getProjectList() {
+        return projectList;
+    }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         final int PAGE_COUNT = 5;
@@ -500,17 +506,17 @@ public class MainActivity extends AppCompatActivity
                 userInfo.putInt("project_id", currentProject.getId());
                 switch(position) {
                     case 0:
-                        return BookmarksFragment.newInstance(userInfo);
+                        return BookmarksFragment.newInstance(userInfo, MainActivity.this);
                     case 1:
-                        return BookmarksFragment.newInstance(userInfo);
+                        return BookmarksFragment.newInstance(userInfo, MainActivity.this);
                     case 2:
-                        return BookmarksFragment.newInstance(userInfo);
+                        return BookmarksFragment.newInstance(userInfo, MainActivity.this);
                     case 3:
-                        return BookmarksFragment.newInstance(userInfo);
+                        return BookmarksFragment.newInstance(userInfo, MainActivity.this);
                     case 4:
                         return ChatFragment.newInstance();
                     default:
-                        return BookmarksFragment.newInstance(userInfo);
+                        return BookmarksFragment.newInstance(userInfo, MainActivity.this);
                 }
             } else {
                 return MainFragment.newInstance();
