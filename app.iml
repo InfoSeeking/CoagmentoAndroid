@@ -107,8 +107,8 @@
     <orderEntry type="library" exported="" name="com.amulyakhare.textdrawable-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="floatingactionbutton-1.10.1" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.5" level="project" />
-    <orderEntry type="library" exported="" name="okhttp-2.7.2" level="project" />
     <orderEntry type="library" exported="" name="logging-interceptor-2.7.2" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-2.7.2" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.5" level="project" />
   </component>
 </module>

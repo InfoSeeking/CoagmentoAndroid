@@ -3,8 +3,12 @@ package org.coagmento.android.data;
 import org.coagmento.android.models.BookmarksListResponse;
 import org.coagmento.android.models.DeleteBookmarkResponse;
 import org.coagmento.android.models.NullResponse;
+import org.coagmento.android.models.CreatePageResponse;
+import org.coagmento.android.models.PageResponse;
+import org.coagmento.android.models.PagesListResponse;
 import org.coagmento.android.models.ProjectListResponse;
 import org.coagmento.android.models.ProjectResponse;
+import org.coagmento.android.models.SnippetResponse;
 import org.coagmento.android.models.UserListResponse;
 import org.coagmento.android.models.UserResponse;
 
@@ -109,4 +113,44 @@ public interface EndpointsInterface {
     @PUT("/api/v1/bookmarks/{id}/move")
     Call<NullResponse> moveProject(@Path("id") int bookmark_id, @Query("project_id")int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
 
+
+    /*
+     *  PAGES
+     */
+
+    // Pages - Create
+    @POST("/api/v1/pages")
+    Call<CreatePageResponse> createPage(@Query("project_id") int project_id, @Query("url") String url, @Query("auth_email") String email, @Query("auth_password") String password);
+    Call<CreatePageResponse> createPage(@Query("project_id") int project_id, @Query("url") String url, @Query("title") String title, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Pages - Delete
+    @DELETE("/api/v1/pages/{id}")
+    Call<NullResponse> deletePage(@Path("id") int page_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Pages - Get Multipled
+    @GET("/api/v1/pages")
+    Call<PagesListResponse> getMultiplePages(@Query("project_id") int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Pages Get
+    @GET("/api/v1/pages/{id}")
+    Call<PageResponse> getPage(@Path("id") int page_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+
+
+    /*
+     *  SNIPPET
+     */
+    // Snippet - Create
+    @POST("/api/v1/snippets")
+    Call<SnippetResponse> createSnippet(@Query("project_id") int project_id, @Query("url") String url, @Query("text") String text, @Query("auth_email") String email, @Query("auth_password") String password);
+    Call<SnippetResponse> createSnippet(@Query("project_id") int project_id, @Query("url") String url, @Query("text") String text, @Query("title") String title, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Snippet - Get
+    @GET("/api/v1/snippets/{id}")
+    Call<SnippetResponse> getSnippet(@Path("id") int snippet_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Snippet - Get Multiple
+
+
 }
+

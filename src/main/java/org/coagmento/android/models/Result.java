@@ -27,7 +27,36 @@ public class Result implements Serializable {
     private Object deleted_at;
     private String url;
     private String notes;
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    private String text;
     private Thumbnail thumbnail;
+    @SerializedName("is_query") private String isQuery;
+
+    public String getIsQuery() {
+        return isQuery;
+    }
+
+    public void setIsQuery(String isQuery) {
+        this.isQuery = isQuery;
+    }
+
+    private Page page;
+
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
+    }
 
     public String getNotes() {
         return notes;

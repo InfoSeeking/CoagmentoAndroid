@@ -30,14 +30,14 @@ public class PagesRecyclerViewAdapter extends RecyclerView.Adapter<PagesRecycler
         public boolean onItemLongClicked(int position);
     }
 
-    List<Result> bookmarks;
+    List<Result> pages;
     Bundle userInfo;
     String host, email, password;
     OnItemClickListener onItemClickListener;
     OnItemLongClickListener onItemLongClickListener;
 
     public PagesRecyclerViewAdapter(List<Result> pages, Bundle userInfo, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
-        this.bookmarks = bookmarks;
+        this.pages = pages;
         this.userInfo = userInfo;
         this.onItemClickListener = onItemClickListener;
         this.onItemLongClickListener = onItemLongClickListener;
@@ -52,7 +52,7 @@ public class PagesRecyclerViewAdapter extends RecyclerView.Adapter<PagesRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.bookmarkItem = bookmarks.get(position);
+        holder.bookmarkItem = pages.get(position);
 
         // Build Image URL
         host = userInfo.getString("host");
@@ -98,7 +98,7 @@ public class PagesRecyclerViewAdapter extends RecyclerView.Adapter<PagesRecycler
 
     @Override
     public int getItemCount() {
-        return bookmarks.size();
+        return pages.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
