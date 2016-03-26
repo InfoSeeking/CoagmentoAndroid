@@ -31,6 +31,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.okhttp.OkHttpClient;
 
@@ -59,7 +60,6 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     // UI references.
-    private CoordinatorLayout coordinatorLayout;
     private EditText mUserNameView;
     private EditText mEmailView;
     private EditText mPasswordView;
@@ -69,9 +69,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id
-                .coordinatorLayout);
 
         // Set up the login form.
         mUserNameView = (EditText) findViewById(R.id.name_register_form);
@@ -226,9 +223,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
         if(responseStatus) {
-            Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, "Registration Successful.", Snackbar.LENGTH_SHORT);
-            snackbar.show();
+            Toast.makeText(this, "Registration Successful.", Toast.LENGTH_SHORT);
             finish();
 
         } else {

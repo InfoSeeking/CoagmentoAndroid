@@ -25,18 +25,38 @@
         </activity>
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_login"
-            android:theme="@style/FancyLogin.Dark"/>
+            android:theme="@style/FancyLogin.Dark" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RegisterActivity"
-            android:theme="@style/FancyLogin.Dark"
-            android:label="@string/title_activity_register" />
-        <activity android:name=".NewProjectActivity" />
-        <activity android:name=".EditProject" />
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_register"
+            android:theme="@style/FancyLogin.Dark" />
+        <activity android:name=".NewProjectActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".EditProject"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".ShareToProject"   android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".EditSnippet"></activity>
+        <activity android:name=".EditBookmark"></activity>
     </application>
 
 </manifest>

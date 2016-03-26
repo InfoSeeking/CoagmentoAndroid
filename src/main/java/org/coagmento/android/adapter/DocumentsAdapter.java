@@ -1,6 +1,5 @@
 package org.coagmento.android.adapter;
 
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +12,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import org.coagmento.android.R;
-import org.coagmento.android.data.EndpointsInterface;
 import org.coagmento.android.models.Result;
-import org.coagmento.android.models.UserResponse;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,16 +20,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
-
 /**
  * Created by Yash Shah on 2/13/15.
  */
-public class PagesRecyclerViewAdapter extends RecyclerView.Adapter<PagesRecyclerViewAdapter.ViewHolder> {
+public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.ViewHolder> {
 
     public interface OnItemClickListener {
         public void onItemClicked(int position);
@@ -50,7 +41,7 @@ public class PagesRecyclerViewAdapter extends RecyclerView.Adapter<PagesRecycler
     OnItemClickListener onItemClickListener;
     OnItemLongClickListener onItemLongClickListener;
 
-    public PagesRecyclerViewAdapter(List<Result> pages, List<Result> users, Bundle userInfo, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
+    public DocumentsAdapter(List<Result> pages, List<Result> users, Bundle userInfo, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
         this.pages = pages;
         this.userInfo = userInfo;
         this.onItemClickListener = onItemClickListener;

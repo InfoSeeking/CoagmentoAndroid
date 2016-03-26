@@ -14,6 +14,7 @@
         android:layout_marginRight="@dimen/cardMarginHorizontal"
         android:layout_marginTop="@dimen/cardMarginVertical"
         app:cardCornerRadius="2dp"
+        android:background="?attr/selectableItemBackground"
         app:cardElevation="2dp"
         app:cardPreventCornerOverlap="false"
         app:contentPadding="0dp">

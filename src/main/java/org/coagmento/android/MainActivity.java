@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,8 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -33,9 +32,13 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.okhttp.ResponseBody;
 import org.coagmento.android.data.EndpointsInterface;
+import org.coagmento.android.fragment.ActivityFragment;
 import org.coagmento.android.fragment.BookmarksFragment;
+import org.coagmento.android.fragment.ChatFragment;
 import org.coagmento.android.fragment.MainFragment;
 
+import org.coagmento.android.fragment.SearchesFragment;
+import org.coagmento.android.fragment.SnippetsFragment;
 import org.coagmento.android.models.Errors;
 import org.coagmento.android.models.ProjectListResponse;
 import org.coagmento.android.models.Result;
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity
     private HashMap<MenuItem, Result> menuItemHashMap;
     private HashMap<Integer, MenuItem> projectIdHashMap;
     private FloatingActionsMenu floatingActionsMenu;
+    private ShareActionProvider mShareActionProvider;
+    private FloatingActionButton addSnippetButton, addBookmarkButton;
 
     // User Data Variables
     private String host, email, password, name;
@@ -195,6 +200,8 @@ public class MainActivity extends AppCompatActivity
 
         // Find the floating action button
         floatingActionsMenu = (FloatingActionsMenu) findViewById(R.id.fab);
+        addBookmarkButton = (FloatingActionButton) findViewById(R.id.add_bookmark_fab);
+        addSnippetButton = (FloatingActionButton) findViewById(R.id.add_snippet_fab);
 
         // Set User Name and Email in navigation header
         userAvatarView = (ImageView) findViewById(R.id.userAvatarView);
@@ -274,68 +281,38 @@ public class MainActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(),
                 MainActivity.this));
+        viewPager.setOffscreenPageLimit(4);
 
         // Give the TabLayout the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                switch (position) {
-                    case 0:
-                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                        break;
-                    case 1:
-                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                        break;
-                    case 2:
-                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                        break;
-                    case 3:
-                        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-                        break;
-                    case 4:
-                        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                        break;
-                    case 1:
-                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                        break;
-                    case 2:
-                        findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                        break;
-                    case 3:
-                        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-                        break;
-                    case 4:
-                        findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        if(currentProject.getLevel().equals("w") || currentProject.getLevel().equals("o")) {
+            findViewById(R.id.fab).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+        }
 
         if(projectList.size() == 0) {
             tabLayout.setVisibility(View.GONE);
             floatingActionsMenu.setVisibility(View.GONE);
         }
+
+        addSnippetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EditSnippet.class);
+                startActivity(intent);
+            }
+        });
+
+        addBookmarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, EditBookmark.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -414,6 +391,8 @@ public class MainActivity extends AppCompatActivity
             previousItem = item;
             toolbar.setTitle(currentProject.getTitle());
 
+            // TODO: Fix bug where it only finds some of the fragments in the back stack
+
             // Refresh data in fragments when project is switched
             List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
             if(fragmentList != null) {
@@ -421,8 +400,14 @@ public class MainActivity extends AppCompatActivity
                     if(fragment instanceof BookmarksFragment) {
                         BookmarksFragment bookmarksFragment = (BookmarksFragment) fragment;
                         bookmarksFragment.loadList(currentProject.getProjectId());
+                    } else if(fragment instanceof ActivityFragment){
+                        ActivityFragment activityFragment = (ActivityFragment) fragment;
+                        activityFragment.loadList(currentProject.getProjectId());
+                    } else if (fragment instanceof SnippetsFragment) {
+                        SnippetsFragment snippetsFragment = (SnippetsFragment) fragment;
+                        snippetsFragment.loadList(currentProject.getProjectId());
                     } else if(fragment instanceof ChatFragment) {
-                        Toast.makeText(getApplicationContext(), "switched fragment", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             }
@@ -487,7 +472,7 @@ public class MainActivity extends AppCompatActivity
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         final int PAGE_COUNT = 5;
-        private String tabTitles[] = new String[]{"Bookmarks", "Pages", "Snippets", "Documents", "Chat"};
+        private String tabTitles[] = new String[]{"Pages", "Searches", "Bookmarks", "Snippets", "Documents"};
         private Context context;
 
         public SectionsPagerAdapter(FragmentManager fm, Context context) {
@@ -497,7 +482,11 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public int getCount() {
-            return PAGE_COUNT;
+            if(projectList.size() > 0) {
+                return PAGE_COUNT;
+            } else {
+                return 1;
+            }
         }
 
         @Override
@@ -506,17 +495,15 @@ public class MainActivity extends AppCompatActivity
                 userInfo.putInt("project_id", currentProject.getId());
                 switch(position) {
                     case 0:
-                        return BookmarksFragment.newInstance(userInfo, MainActivity.this);
+                        return ActivityFragment.newInstance(userInfo);
                     case 1:
-                        return BookmarksFragment.newInstance(userInfo, MainActivity.this);
+                        return SearchesFragment.newInstance(userInfo);
                     case 2:
                         return BookmarksFragment.newInstance(userInfo, MainActivity.this);
                     case 3:
-                        return BookmarksFragment.newInstance(userInfo, MainActivity.this);
-                    case 4:
-                        return ChatFragment.newInstance();
+                        return SnippetsFragment.newInstance(userInfo);
                     default:
-                        return BookmarksFragment.newInstance(userInfo, MainActivity.this);
+                        return MainFragment.newInstance();
                 }
             } else {
                 return MainFragment.newInstance();

@@ -28,6 +28,25 @@ public class Result implements Serializable {
     private String url;
     private String notes;
 
+    public String getSearch_engine() {
+        return search_engine;
+    }
+
+    public void setSearch_engine(String search_engine) {
+        this.search_engine = search_engine;
+    }
+
+    private String message;
+    private String search_engine;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getText() {
         return text;
     }

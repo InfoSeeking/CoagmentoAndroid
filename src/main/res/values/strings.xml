@@ -3,6 +3,7 @@
 
 
     <string name="server_base_url">http://new.coagmento.org</string>
+    <string name="socket_web_server">http://new.coagmento.org:8000</string>
 
 
     <string name="title_activity_login">Sign In</string>
@@ -78,5 +79,26 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="move">Move to Project</string>
+    <string name="send_message_hint">Send a message...</string>
 
+    <string name="prompt_no_snippets_found">No snippets were found for this project. \n\nUse the \'add\' button to add snippets to this project.</string>
+    <string name="prompt_no_bookmarks_found">No bookmarks were found for this project. \n\nUse the \'add\' button to add bookmarks to this project.</string>
+    <string name="prompt_no_pages_found">No pages were found for this project. \n\nAs you continue to use the app, you will find a list of your recent web and search history relevant to the project.</string>
+    <string name="prompt_no_searches_found">No searches were found for this project. \n\nAs you continue to use the app, you will find a list of your recent web and search history relevant to the project.</string>
+    <string name="prompt_no_documents_found">No files were found for this project. \n\nVisit the web interface to add and edit files</string>
+    <string name="action_add_snippet">Save Snippet</string>
+    <string name="prompt_add_url">Enter website URL</string>
+    <string name="action_save_bookmark">Save Bookmark</string>
+    <string name="prompt_add_user_email">Enter email for user to add...</string>
+    <string name="prompt_user_permission">User Permission Level:</string>
+
+
+    <string-array name="quickActions">
+        <item>Bookmark</item>
+        <item>Snippet</item>
+    </string-array>
+    <string-array name="permissions">
+        <item>Read</item>
+        <item>Write</item>
+    </string-array>
 </resources>

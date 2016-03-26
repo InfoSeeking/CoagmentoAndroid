@@ -1,6 +1,8 @@
 package org.coagmento.android.data;
 
 import org.coagmento.android.models.BookmarksListResponse;
+import org.coagmento.android.models.ChatListResponse;
+import org.coagmento.android.models.CreateChatMessageResponse;
 import org.coagmento.android.models.DeleteBookmarkResponse;
 import org.coagmento.android.models.NullResponse;
 import org.coagmento.android.models.CreatePageResponse;
@@ -8,6 +10,8 @@ import org.coagmento.android.models.PageResponse;
 import org.coagmento.android.models.PagesListResponse;
 import org.coagmento.android.models.ProjectListResponse;
 import org.coagmento.android.models.ProjectResponse;
+import org.coagmento.android.models.QueryListResponse;
+import org.coagmento.android.models.SnippetListResponse;
 import org.coagmento.android.models.SnippetResponse;
 import org.coagmento.android.models.UserListResponse;
 import org.coagmento.android.models.UserResponse;
@@ -52,6 +56,9 @@ public interface EndpointsInterface {
     // User - Get Multiple
     @GET("/api/v1/users")
     Call<UserListResponse> getUserList(@Query("project_id") int project_id);
+
+    @GET("/api/v1/users")
+    Call<UserListResponse> getUserList();
 
     // PROJECTS
 
@@ -113,6 +120,19 @@ public interface EndpointsInterface {
     @PUT("/api/v1/bookmarks/{id}/move")
     Call<NullResponse> moveProject(@Path("id") int bookmark_id, @Query("project_id")int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
 
+    // Bookmarks - Create
+    @POST("/api/v1/bookmarks")
+    Call<NullResponse> createBookmark(@Query("project_id") int project_id, @Query("url") String url, @Query("notes") String notes,
+                                      @Query("title") String title, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Bookmarks - Update
+    @PUT("/api/v1/snippets/{id}")
+    Call<NullResponse> updateBookmarksURL(@Path("id") int bookmark_id, @Query("url") String url, @Query("auth_email") String email, @Query("auth_password") String password);
+
+
+    @PUT("/api/v1/snippets/{id}")
+    Call<NullResponse> updateBookmarksTITLE(@Path("id") int bookmark_id, @Query("text") String title, @Query("auth_email") String email, @Query("auth_password") String password);
+
 
     /*
      *  PAGES
@@ -143,14 +163,58 @@ public interface EndpointsInterface {
     // Snippet - Create
     @POST("/api/v1/snippets")
     Call<SnippetResponse> createSnippet(@Query("project_id") int project_id, @Query("url") String url, @Query("text") String text, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    @POST("/api/v1/snippets")
     Call<SnippetResponse> createSnippet(@Query("project_id") int project_id, @Query("url") String url, @Query("text") String text, @Query("title") String title, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Snippet - Delete
+    @DELETE("/api/v1/snippets/{id}")
+    Call<NullResponse> deleteSnippet(@Path("id") int snippet_id, @Query("auth_email") String email, @Query("auth_password") String password);
 
     // Snippet - Get
     @GET("/api/v1/snippets/{id}")
     Call<SnippetResponse> getSnippet(@Path("id") int snippet_id, @Query("auth_email") String email, @Query("auth_password") String password);
 
     // Snippet - Get Multiple
+    @GET("/api/v1/snippets")
+    Call<SnippetListResponse> getMultipleSnippets(@Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Snippet - Update
+    @PUT("/api/v1/snippets/{id}")
+    Call<SnippetResponse> updateSnippetURL(@Path("id") int snippet_id, @Query("url") String url, @Query("auth_email") String email, @Query("auth_password") String password);
 
 
+    @PUT("/api/v1/snippets/{id}")
+    Call<SnippetResponse> updateSnippetTEXT(@Path("id") int snippet_id, @Query("text") String text, @Query("auth_email") String email, @Query("auth_password") String password);
+
+
+    /*
+    *   CHAT
+     */
+
+    @GET("/api/v1/chatMessages")
+    Call<ChatListResponse> getChatMessages(@Query("project_id") int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    @POST("/api/v1/chatMessages")
+    Call<CreateChatMessageResponse> sendMessage(@Query("message") String message, @Query("project_id") int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+
+    /*
+    *
+    *  Queries
+    *
+     */
+
+    // Queries - Create
+    @POST("/api/v1/queries")
+    Call<NullResponse> createQuery(@Query("project_id") int project_id, @Query("text") String text, @Query("search_engine") String search_engine, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Query - Delete
+    @DELETE("/api/v1/queries/{id}")
+    Call<NullResponse> deleteQuery(@Path("id") int query_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Query - Get
+    @GET("/api/v1/queries")
+    Call<QueryListResponse> getQueries(@Query("auth_email") String email, @Query("auth_password") String password);
 }
 
