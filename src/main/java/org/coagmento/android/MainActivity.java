@@ -403,6 +403,9 @@ public class MainActivity extends AppCompatActivity
                     } else if(fragment instanceof ActivityFragment){
                         ActivityFragment activityFragment = (ActivityFragment) fragment;
                         activityFragment.loadList(currentProject.getProjectId());
+                    } else if(fragment instanceof SearchesFragment) {
+                        SearchesFragment searchesFragment = (SearchesFragment) fragment;
+                        searchesFragment.loadList(currentProject.getProjectId());
                     } else if (fragment instanceof SnippetsFragment) {
                         SnippetsFragment snippetsFragment = (SnippetsFragment) fragment;
                         snippetsFragment.loadList(currentProject.getProjectId());
