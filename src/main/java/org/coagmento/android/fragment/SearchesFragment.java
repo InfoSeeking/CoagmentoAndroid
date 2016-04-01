@@ -120,7 +120,7 @@ public class SearchesFragment extends Fragment implements SearchesRecyclerViewAd
 
         EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
 
-        Call<QueryListResponse> call = apiService.getQueries(email, password);
+        Call<QueryListResponse> call = apiService.getQueries(project_id, email, password);
 
         call.enqueue(new Callback<QueryListResponse>() {
             @Override

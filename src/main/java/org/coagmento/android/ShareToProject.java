@@ -79,7 +79,7 @@ public class ShareToProject extends AppCompatActivity {
 
         if(email == null || password == null) {
             alertDialog.setTitle("User Not Logged In");
-            alertDialog.setMessage("No user credentials were found. Please open Coagmento and sign in to enable sharing.");
+            alertDialog.setMessage("No user credentials were found. Please open Coagmento and sign in to enable sharing from other apps.");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -92,7 +92,7 @@ public class ShareToProject extends AppCompatActivity {
 
         isURL = Patterns.WEB_URL.matcher(data).matches();
 
-        if(isURL) {
+        if(isURL && email!= null && password != null) {
 
             // Fetch Project Titles, Id's and Ownership
             Retrofit retrofit = new Retrofit.Builder()
@@ -119,30 +119,22 @@ public class ShareToProject extends AppCompatActivity {
                                          getProject();
                                      }
                                  } else {
-                                     Converter<ResponseBody, Errors> errorConverter =
-                                             retrofit.responseConverter(Error.class, new Annotation[0]);
-                                     // Convert the error body into our Error type.
+                                     progressDialog.dismiss();
+
+                                     alertDialog.setTitle("Error.");
                                      try {
-                                         Errors error = errorConverter.convert(response.errorBody());
-                                         List<String> errorList = error.getGeneral();
-                                         String errorValue = errorList.get(0);
-
-                                         progressDialog.dismiss();
-
-                                         alertDialog.setTitle("Error.");
-                                         alertDialog.setMessage(errorValue);
-                                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
-                                                 new DialogInterface.OnClickListener() {
-                                                     public void onClick(DialogInterface dialog, int which) {
-                                                         dialog.dismiss();
-                                                         finish();
-                                                     }
-                                                 });
-                                         alertDialog.show();
-
+                                         alertDialog.setMessage(response.errorBody().string());
                                      } catch (IOException e) {
-
+                                         e.printStackTrace();
                                      }
+                                     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                                             new DialogInterface.OnClickListener() {
+                                                 public void onClick(DialogInterface dialog, int which) {
+                                                     dialog.dismiss();
+                                                     finish();
+                                                 }
+                                             });
+                                     alertDialog.show();
                                  }
                              }
 
@@ -163,7 +155,7 @@ public class ShareToProject extends AppCompatActivity {
                              }
                          }
             );
-        } else {
+        } else if(email != null && password != null){
             alertDialog.setTitle("Invalid URL");
             alertDialog.setMessage("Coagmento doesn't currently support sharing plain text. Please use the share function of your preferred browser to add items to your project.");
             alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",

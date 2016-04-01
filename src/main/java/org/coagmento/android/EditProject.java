@@ -153,7 +153,6 @@ public class EditProject extends AppCompatActivity {
         });
 
         addPersonButton = (Button) findViewById(R.id.add_person_button);
-        // TODO: Implement on click for add user
         addPersonButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,7 +229,6 @@ public class EditProject extends AppCompatActivity {
         });
 
         renameButton = (Button) findViewById(R.id.edit_title);
-        // TODO: Implement on click for rename title
         renameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -3,6 +3,7 @@ package org.coagmento.android.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,10 +24,11 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import org.coagmento.android.DividerItemDecoration;
+import org.coagmento.android.DocumentViewerActivity;
 import org.coagmento.android.R;
 import org.coagmento.android.adapter.DocumentsAdapter;
-import org.coagmento.android.adapter.PagesRecyclerViewAdapter;
 import org.coagmento.android.data.EndpointsInterface;
+import org.coagmento.android.models.ListResponse;
 import org.coagmento.android.models.NullResponse;
 import org.coagmento.android.models.PagesListResponse;
 import org.coagmento.android.models.Result;
@@ -54,7 +56,7 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
     private View rootView;
 
     private int ITEM_COUNT = 0;
-    private List<Result> pages = new ArrayList<>();
+    private List<Result> documents = new ArrayList<>();
     private List<Result> users = new ArrayList<>();
 
     public static DocumentsFragment newInstance(Bundle userInfo) {
@@ -92,7 +94,7 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mAdapter = new DocumentsAdapter(pages, users, userInfo, this, this);
+        mAdapter = new DocumentsAdapter(documents, users, userInfo, this, this);
         mRecyclerView.setAdapter(mAdapter);
 
         noDataMessage = (TextView) view.findViewById(R.id.noDataFound);
@@ -120,19 +122,19 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
 
         EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
 
-        Call<PagesListResponse> call = apiService.getMultiplePages(project_id, email, password);
+        Call<ListResponse> call = apiService.getDocuments(project_id, email, password);
 
-        call.enqueue(new Callback<PagesListResponse>() {
+        call.enqueue(new Callback<ListResponse>() {
             @Override
-            public void onResponse(Response<PagesListResponse> response, Retrofit retrofit) {
+            public void onResponse(Response<ListResponse> response, Retrofit retrofit) {
                 if (response.code() == 200) {
-                    pages.clear();
-                    pages.addAll(response.body().getResult());
-                    ITEM_COUNT = pages.size();
+                    documents.clear();
+                    documents.addAll(response.body().getResult());
+                    ITEM_COUNT = documents.size();
                     mAdapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
 
-                    if(pages.size() > 0) {
+                    if(documents.size() > 0) {
                         noDataMessage.setVisibility(View.GONE);
                         mRecyclerView.setVisibility(View.VISIBLE);
                     } else {
@@ -170,12 +172,8 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
 
     @Override
     public void onItemClicked(int position) {
-        String url = pages.get(position).getUrl();
-        Uri uri = Uri.parse(url);
-        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        builder.setToolbarColor(getResources().getColor(R.color.colorPrimaryDark));
-        CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(getActivity(), uri);
+        startActivity(new Intent(getActivity(), DocumentViewerActivity.class));
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override
@@ -184,12 +182,12 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
         final Context context = getContext();
 
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(context);
-        builderSingle.setTitle(pages.get(position).getTitle());
+        builderSingle.setTitle(documents.get(position).getTitle());
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 getContext(),
                 R.layout.dialog_selectable_list);
-        arrayAdapter.add("Delete Page");
+        arrayAdapter.add("Delete Document");
 
         builderSingle.setAdapter(
                 arrayAdapter,
@@ -199,9 +197,9 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
                         String strName = arrayAdapter.getItem(which);
 
                         switch (strName) {
-                            case "Delete Page":
+                            case "Delete Document":
                                 dialog.dismiss();
-                                deletePage(pages.get(position));
+                                deleteDocument(documents.get(position));
                             default:
                                 Snackbar snackbar = Snackbar
                                         .make(rootView, strName, Snackbar.LENGTH_LONG);
@@ -217,7 +215,7 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
         return false;
     }
 
-    public void deletePage(Result page) {
+    public void deleteDocument(Result document) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(host)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -225,14 +223,14 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
 
         EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
 
-        Call<NullResponse> call = apiService.deletePage(page.getId(), email, password);
+        Call<NullResponse> call = apiService.deletePage(document.getId(), email, password);
 
         call.enqueue(new Callback<NullResponse>() {
             @Override
             public void onResponse(Response<NullResponse> response, Retrofit retrofit) {
                 if(response.code() == 200) {
                     Snackbar snackbar = Snackbar
-                            .make(rootView, "Page Deleted.", Snackbar.LENGTH_SHORT);
+                            .make(rootView, "Document Deleted.", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                     loadList(project_id);
                 } else {

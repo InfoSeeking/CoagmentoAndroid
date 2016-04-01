@@ -35,10 +35,12 @@ import org.coagmento.android.data.EndpointsInterface;
 import org.coagmento.android.fragment.ActivityFragment;
 import org.coagmento.android.fragment.BookmarksFragment;
 import org.coagmento.android.fragment.ChatFragment;
+import org.coagmento.android.fragment.DocumentsFragment;
 import org.coagmento.android.fragment.MainFragment;
 
 import org.coagmento.android.fragment.SearchesFragment;
 import org.coagmento.android.fragment.SnippetsFragment;
+import org.coagmento.android.models.DocumentResult;
 import org.coagmento.android.models.Errors;
 import org.coagmento.android.models.ProjectListResponse;
 import org.coagmento.android.models.Result;
@@ -272,8 +274,29 @@ public class MainActivity extends AppCompatActivity
             } else if (currentProject == null && (myProjectList.size() > 0 || sharedProjectList.size() > 0)) {
                 loadFirstProject();
             }
-        } else {
-            toolbar.setTitle(R.string.no_projects_found);
+
+            // Set Floating Action Button Visible only if user has write access
+            if(currentProject.getLevel().equals("w") || currentProject.getLevel().equals("o")) {
+                findViewById(R.id.fab).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.fab).setVisibility(View.INVISIBLE);
+            }
+
+            addSnippetButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, EditSnippet.class);
+                    startActivity(intent);
+                }
+            });
+
+            addBookmarkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, EditBookmark.class);
+                    startActivity(intent);
+                }
+            });
         }
 
         // Set ViewPager
@@ -287,32 +310,11 @@ public class MainActivity extends AppCompatActivity
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        if(currentProject.getLevel().equals("w") || currentProject.getLevel().equals("o")) {
-            findViewById(R.id.fab).setVisibility(View.VISIBLE);
-        } else {
-            findViewById(R.id.fab).setVisibility(View.INVISIBLE);
-        }
-
         if(projectList.size() == 0) {
+            toolbar.setTitle(R.string.no_projects_found);
             tabLayout.setVisibility(View.GONE);
             floatingActionsMenu.setVisibility(View.GONE);
         }
-
-        addSnippetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditSnippet.class);
-                startActivity(intent);
-            }
-        });
-
-        addBookmarkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, EditBookmark.class);
-                startActivity(intent);
-            }
-        });
 
     }
 
@@ -391,8 +393,6 @@ public class MainActivity extends AppCompatActivity
             previousItem = item;
             toolbar.setTitle(currentProject.getTitle());
 
-            // TODO: Fix bug where it only finds some of the fragments in the back stack
-
             // Refresh data in fragments when project is switched
             List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
             if(fragmentList != null) {
@@ -409,10 +409,20 @@ public class MainActivity extends AppCompatActivity
                     } else if (fragment instanceof SnippetsFragment) {
                         SnippetsFragment snippetsFragment = (SnippetsFragment) fragment;
                         snippetsFragment.loadList(currentProject.getProjectId());
+                    } else if (fragment instanceof DocumentsFragment) {
+                        DocumentsFragment documentsFragment = (DocumentsFragment) fragment;
+                        documentsFragment.loadList(currentProject.getProjectId());
                     } else if(fragment instanceof ChatFragment) {
 
                     }
                 }
+            }
+
+            // Set Floating Action Button Visible only if user has write access
+            if(currentProject.getLevel().equals("w") || currentProject.getLevel().equals("o")) {
+                findViewById(R.id.fab).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.fab).setVisibility(View.INVISIBLE);
             }
         }
 
@@ -456,7 +466,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     protected void loadFirstProject() {
-        previousItem = navigationView.getMenu().getItem(1).getSubMenu().getItem(0);
+        if(navigationView.getMenu().getItem(1).getSubMenu().size() > 0) previousItem = navigationView.getMenu().getItem(1).getSubMenu().getItem(0);
+        else previousItem = navigationView.getMenu().getItem(2).getSubMenu().getItem(0);
         previousItem.setChecked(true);
         toolbar.setTitle(previousItem.getTitle());
         currentProject = menuItemHashMap.get(previousItem);
@@ -494,7 +505,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public Fragment getItem(int position) {
-            if (projectList.size() != 0) {
+            if (projectList.size() != 0 && currentProject != null) {
                 userInfo.putInt("project_id", currentProject.getId());
                 switch(position) {
                     case 0:
@@ -505,6 +516,8 @@ public class MainActivity extends AppCompatActivity
                         return BookmarksFragment.newInstance(userInfo, MainActivity.this);
                     case 3:
                         return SnippetsFragment.newInstance(userInfo);
+                    case 4:
+                        return DocumentsFragment.newInstance(userInfo);
                     default:
                         return MainFragment.newInstance();
                 }

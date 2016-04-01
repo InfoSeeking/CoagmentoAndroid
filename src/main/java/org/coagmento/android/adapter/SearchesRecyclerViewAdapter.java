@@ -65,6 +65,25 @@ public class SearchesRecyclerViewAdapter extends RecyclerView.Adapter<SearchesRe
         email = userInfo.getString("email");
         password = userInfo.getString("password");
 
+        // Get Image
+        switch(holder.query.getSearch_engine()) {
+            case "google":
+                holder.thumbnail.setImageResource(R.drawable.google);
+                break;
+            case "bing":
+                holder.thumbnail.setImageResource(R.drawable.bing);
+                break;
+            case "yahoo":
+                holder.thumbnail.setImageResource(R.drawable.yahoo);
+                break;
+            case "duckduckgo":
+                holder.thumbnail.setImageResource(R.drawable.duckduckgo);
+                break;
+            default:
+                holder.thumbnail.setImageResource(R.drawable.unavailable);
+                break;
+        }
+
         for (Result user : users) {
             userHashMap.put(user.getId(), user.getName());
         }

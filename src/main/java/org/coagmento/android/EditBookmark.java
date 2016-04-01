@@ -202,10 +202,11 @@ public class EditBookmark extends AppCompatActivity implements AdapterView.OnIte
                 projectsSpinner.setSelection(projectPositionById.get(project_id));
 
                 titleView.setText(title);
-                titleView.setInputType(InputType.TYPE_NULL);
-
                 urlView.setText(url);
+
                 notesView.setText(notes);
+                if(notes.length() == 0) notesView.setText("Editing bookmark notes is not yet supported.");
+                notesView.setInputType(InputType.TYPE_NULL);
 
             }
         } else {
@@ -301,8 +302,8 @@ public class EditBookmark extends AppCompatActivity implements AdapterView.OnIte
                 });
             } else if (action.equals("EDIT")) {
 
-                if(!textInput.equals(notes)) {
-                    Call<NullResponse> updateTextCall = apiService.updateBookmarksTITLE(bookmark_id, textInput, email, password);
+                if(!titleInput.equals(title)) {
+                    Call<NullResponse> updateTextCall = apiService.updateBookmarksTITLE(bookmark_id, titleInput, email, password);
                     updateTextCall.enqueue(new Callback<NullResponse>() {
                         @Override
                         public void onResponse(Response<NullResponse> response, Retrofit retrofit) {

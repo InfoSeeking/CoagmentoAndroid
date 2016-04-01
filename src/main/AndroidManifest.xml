@@ -25,27 +25,28 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
             android:theme="@style/FancyLogin.Dark" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RegisterActivity"
-            android:screenOrientation="portrait"
             android:label="@string/title_activity_register"
+            android:screenOrientation="portrait"
             android:theme="@style/FancyLogin.Dark" />
-        <activity android:name=".NewProjectActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".EditProject"
-            android:screenOrientation="portrait"
-            />
         <activity
-            android:name=".ShareToProject"   android:screenOrientation="portrait"
+            android:name=".NewProjectActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EditProject"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ShareToProject"
+            android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -55,8 +56,11 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".EditSnippet"></activity>
-        <activity android:name=".EditBookmark"></activity>
+        <activity android:name=".EditSnippet" />
+        <activity android:name=".EditBookmark" />
+        <activity android:name=".DocumentViewerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TranslucentTheme"></activity>
     </application>
 
 </manifest>

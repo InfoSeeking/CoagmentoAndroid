@@ -1,6 +1,5 @@
 package org.coagmento.android.adapter;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import org.coagmento.android.R;
 import org.coagmento.android.models.Result;
@@ -34,15 +31,15 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.View
     }
 
     private HashMap<Integer, String> userHashMap = new HashMap();
-    List<Result> pages;
+    List<Result> documents;
     List<Result> users;
     Bundle userInfo;
     String host, email, password;
     OnItemClickListener onItemClickListener;
     OnItemLongClickListener onItemLongClickListener;
 
-    public DocumentsAdapter(List<Result> pages, List<Result> users, Bundle userInfo, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
-        this.pages = pages;
+    public DocumentsAdapter(List<Result> documents, List<Result> users, Bundle userInfo, OnItemClickListener onItemClickListener, OnItemLongClickListener onItemLongClickListener) {
+        this.documents = documents;
         this.userInfo = userInfo;
         this.onItemClickListener = onItemClickListener;
         this.onItemLongClickListener = onItemLongClickListener;
@@ -52,13 +49,13 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.pages_list_item, parent, false);
+                .inflate(R.layout.documents_list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.page = pages.get(position);
+        holder.document = documents.get(position);
 
         // Build Server Details
         host = userInfo.getString("host");
@@ -69,28 +66,12 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.View
             userHashMap.put(user.getId(), user.getName());
         }
 
-        String user_name = userHashMap.get(holder.page.getuser_id());
-
-        String file_name = holder.page.getThumbnail().getImageLarge();
-        Uri imageUri = Uri.parse(host).buildUpon()
-                .appendPath("images")
-                .appendPath("thumbnails")
-                .appendPath("large")
-                .appendPath(file_name)
-                .build();
-        String imageURL = imageUri.toString();
-
-        // Use Picasso to retrieve image
-        Picasso.with(holder.thumbnail.getContext())
-                .load(imageURL)
-                .placeholder(R.drawable.unavailable)
-                .error(R.drawable.unavailable)
-                .into(holder.thumbnail);
+        String user_name = userHashMap.get(holder.document.getcreator_id());
 
         String formattedDate = "";
         SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
         try {
-            Date date2 = dateFormat2.parse(holder.page.getcreated_at());
+            Date date2 = dateFormat2.parse(holder.document.getcreated_at());
             formattedDate = new SimpleDateFormat("EEEE, MMMM d").format(date2);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -98,7 +79,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.View
 
         String description = "Saved " + formattedDate + " by " + user_name;
 
-        holder.title.setText(holder.page.getTitle());
+        holder.title.setText(holder.document.getTitle());
 
         holder.description.setText(description);
 
@@ -121,7 +102,7 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.View
 
     @Override
     public int getItemCount() {
-        return pages.size();
+        return documents.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -130,14 +111,15 @@ public class DocumentsAdapter extends RecyclerView.Adapter<DocumentsAdapter.View
         public final TextView title;
         public final TextView description;
 
-        public Result page;
+        public Result document;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            thumbnail = (ImageView) view.findViewById(R.id.page_image_list_item);
-            title = (TextView) view.findViewById(R.id.page_title_list_item);
-            description = (TextView) view.findViewById(R.id.page_desc_list_item);
+            thumbnail = (ImageView) view.findViewById(R.id.doc_image_item);
+            thumbnail.setImageResource(R.drawable.ic_insert_drive_file_black_24dp);
+            title = (TextView) view.findViewById(R.id.doc_title_item);
+            description = (TextView) view.findViewById(R.id.doc_desc_item);
         }
     }
 

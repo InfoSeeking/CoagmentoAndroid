@@ -4,6 +4,8 @@ import org.coagmento.android.models.BookmarksListResponse;
 import org.coagmento.android.models.ChatListResponse;
 import org.coagmento.android.models.CreateChatMessageResponse;
 import org.coagmento.android.models.DeleteBookmarkResponse;
+import org.coagmento.android.models.DocumentTextResponse;
+import org.coagmento.android.models.ListResponse;
 import org.coagmento.android.models.NullResponse;
 import org.coagmento.android.models.CreatePageResponse;
 import org.coagmento.android.models.PageResponse;
@@ -126,12 +128,12 @@ public interface EndpointsInterface {
                                       @Query("title") String title, @Query("auth_email") String email, @Query("auth_password") String password);
 
     // Bookmarks - Update
-    @PUT("/api/v1/snippets/{id}")
+    @PUT("/api/v1/bookmarks/{id}")
     Call<NullResponse> updateBookmarksURL(@Path("id") int bookmark_id, @Query("url") String url, @Query("auth_email") String email, @Query("auth_password") String password);
 
 
-    @PUT("/api/v1/snippets/{id}")
-    Call<NullResponse> updateBookmarksTITLE(@Path("id") int bookmark_id, @Query("text") String title, @Query("auth_email") String email, @Query("auth_password") String password);
+    @PUT("/api/v1/bookmarks/{id}")
+    Call<NullResponse> updateBookmarksTITLE(@Path("id") int bookmark_id, @Query("title") String title, @Query("auth_email") String email, @Query("auth_password") String password);
 
 
     /*
@@ -215,6 +217,25 @@ public interface EndpointsInterface {
 
     // Query - Get
     @GET("/api/v1/queries")
-    Call<QueryListResponse> getQueries(@Query("auth_email") String email, @Query("auth_password") String password);
+    Call<QueryListResponse> getQueries(@Query("project_id") int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    /*
+    *
+    *   DOCUMENTs
+    *
+     */
+
+    // Documents - Get Multiple
+    @GET("/api/v1/docs")
+    Call<ListResponse> getDocuments(@Query("project_id") int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Documents - Get Text
+    @GET("/api/v1/docs/{id}/text")
+    Call<DocumentTextResponse> getDocumentText(@Path("id") int doc_id, @Query("project_id") int project_id, @Query("auth_email") String email, @Query("auth_password") String password);
+
+    // Documents - Create
+    @DELETE("/api/v1/docs/{id}")
+    Call<NullResponse> deleteDocument(@Path("id") int doc_id, @Query("auth_email") String email, @Query("auth_password") String password);
 }
+
 

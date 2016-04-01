@@ -65,7 +65,6 @@
     <string name="edit_project_privacy_label">Access</string>
     <string name="edit_project_members_label">Project Members</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="main_fragment_bookmarks">Bookmarks</string>
     <string name="main_fragment_pages">Pages</string>
