@@ -106,7 +106,7 @@ public class LoginActivity extends AppCompatActivity  {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString();
         final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -129,7 +129,27 @@ public class LoginActivity extends AppCompatActivity  {
             focusView = mEmailView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+            alertDialog.setTitle("Invalid Email.");
+            alertDialog.setMessage("Support for a Coagmento username is being dropped in favor of emails. If you are an existing user with only a username, please press 'CONTINUE' to log in with your temporary credentials. It is recommended that you login to the web interface and add an email to your account as soon as possible.");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "CONTINUE",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            String filteredEmail = email.replace(" ", "");
+                            mEmailView.setText(filteredEmail + "@coagmento.org");
+                            attemptLogin();
+                            dialog.dismiss();
+                            return;
+                        }
+                    });
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "CANCEL", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mEmailView.setError(getString(R.string.error_invalid_email));
+                    dialog.dismiss();
+                }
+            });
+            alertDialog.show();
+
             focusView = mEmailView;
             cancel = true;
         }
@@ -160,9 +180,10 @@ public class LoginActivity extends AppCompatActivity  {
                              UserResponse userResponse = response.body();
                              if (userResponse.getStatus().equals("ok")) {
                                  responseStatus = true;
+                                 int response_id = userResponse.getResult().getUser().getId();
                                  String response_name = userResponse.getResult().getUser().getName();
                                  String response_email = userResponse.getResult().getUser().getEmail();
-                                 saveCredentials(BASE_URL, response_name, response_email, password);
+                                 saveCredentials(response_id, BASE_URL, response_name, response_email, password);
                              }
                          }
                          showProgress(false);
@@ -232,9 +253,10 @@ public class LoginActivity extends AppCompatActivity  {
 
     }
 
-    private void saveCredentials(String host, String name, String email, String password) {
+    private void saveCredentials(int user_id, String host, String name, String email, String password) {
         SharedPreferences prefs = this.getSharedPreferences("Login", 0);
         SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("user_id", user_id);
         editor.putString("host", host);
         editor.putString("name", name);
         editor.putString("email", email);

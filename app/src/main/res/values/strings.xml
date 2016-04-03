@@ -80,8 +80,8 @@
     <string name="move">Move to Project</string>
     <string name="send_message_hint">Send a message...</string>
 
-    <string name="prompt_no_snippets_found">No snippets were found for this project. \n\nUse the \'add\' button to add snippets to this project.</string>
-    <string name="prompt_no_bookmarks_found">No bookmarks were found for this project. \n\nUse the \'add\' button to add bookmarks to this project.</string>
+    <string name="prompt_no_snippets_found">No snippets were found for this project. \n\nYou can use the \'add\' button or share a link from your favorite browser to add snippets to this project.</string>
+    <string name="prompt_no_bookmarks_found">No bookmarks were found for this project. \n\nUse the \'add\' button or share a link from your favorite browser to add bookmarks to this project.</string>
     <string name="prompt_no_pages_found">No pages were found for this project. \n\nAs you continue to use the app, you will find a list of your recent web and search history relevant to the project.</string>
     <string name="prompt_no_searches_found">No searches were found for this project. \n\nAs you continue to use the app, you will find a list of your recent web and search history relevant to the project.</string>
     <string name="prompt_no_documents_found">No files were found for this project. \n\nVisit the web interface to add and edit files</string>
@@ -100,4 +100,27 @@
         <item>Read</item>
         <item>Write</item>
     </string-array>
+
+    <!-- Settings -->>
+
+    <string name="pref_about_title">About</string>
+    <string name="version_key">pref_version</string>
+    <string name="open_source_key">pref_open_source</string>
+    <string name="open_source_title">Source Code</string>
+    <string name="pref_attributions_title">Licenses</string>
+    <string name="attributions_key">pref_attributions</string>
+
+    <string name="ok">OK</string>
+    <string name="pref_features">Beta Features</string>
+    <string name="pref_title_search">Search</string>
+    <string name="pref_key_search">pref_search</string>
+    <string name="pref_key_chat">pref_chat</string>
+    <string name="pref_title_chat">Chat</string>
+    <string name="pref_key_about">pref_about</string>
+    <string name="pref_title_about">About Coagmento</string>
+    <string name="pref_key_team">pref_team</string>
+    <string name="pref_title_team">Team</string>
+    <string name="title_about_coagmento">About Coagmento</string>
+    <string name="description_about_coagmento">Coagmento was originally developed in 2007 by Chirag Shah as a research project for his dissertation. It then continued taking shape in different forms as various user studies were designed around and with it. Coagmento was brought to Rutgers University, where its development was furthered by PhD student Roberto Gonzalez-Ibanez. Several other students contributed in creating different versions and functions of the system, as well as using it for research studies.</string>
+    <string name="about_team"><b>Chirag Shah</b>\nAdvisor\n\n<b>Roberto Gonzalez-Ibanez</b>\nConsultant\n\n<b>Kevin Albertson</b>\nBackend Developer\n\n<b>Abdulaziz Ramos</b>\nWeb Designer\n\n<b>Yash Shah</b>\nAndroid Developer\n\n</string>
 </resources>

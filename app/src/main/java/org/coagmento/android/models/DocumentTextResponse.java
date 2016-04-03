@@ -42,7 +42,16 @@ public class DocumentTextResponse {
         return errors;
     }
 
+    public DocumentResult getResult() {
+        return result;
+    }
+
+    public void setResult(DocumentResult result) {
+        this.result = result;
+    }
+
     /**
+
      * 
      * @param errors
      *     The errors

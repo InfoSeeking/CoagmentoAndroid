@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.squareup.okhttp.ResponseBody;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity
     private FloatingActionButton addSnippetButton, addBookmarkButton;
 
     // User Data Variables
+    private int user_id;
     private String host, email, password, name;
     private List<Result> projectList, myProjectList, sharedProjectList;
     private Result currentProject = null;
@@ -98,12 +100,16 @@ public class MainActivity extends AppCompatActivity
         // Fetch host, email, password, and names
         SharedPreferences prefs = getSharedPreferences("Login", 0);
         host = getString(R.string.server_base_url);
+        user_id = prefs.getInt("user_id", 0);
         name = prefs.getString("name", null);
         email = prefs.getString("email", null);
         password = prefs.getString("password", null);
         userInfo.putString("host", host);
         userInfo.putString("email", email);
         userInfo.putString("password", password);
+
+        // TODO: Move this to where you establish a user session
+        logUser();
 
         Intent intent = getIntent();
         currentProject = (Result) intent.getSerializableExtra("current_project");
@@ -384,6 +390,10 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("password", password);
             startActivity(intent);
 
+        } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+
         } else {
             if(previousItem != null) {
                 previousItem.setChecked(false);
@@ -472,6 +482,15 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle(previousItem.getTitle());
         currentProject = menuItemHashMap.get(previousItem);
     }
+
+    private void logUser() {
+        // TODO: Use the current user's information
+        // You can call any combination of these three methods
+        Crashlytics.setUserIdentifier(String.valueOf(user_id));
+        Crashlytics.setUserEmail(email);
+        Crashlytics.setUserName(name);
+    }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {

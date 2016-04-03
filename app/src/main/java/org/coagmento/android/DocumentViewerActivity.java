@@ -4,8 +4,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class DocumentViewerActivity extends AppCompatActivity {
+
+    private ImageView exitButton;
+    private TextView docTitleView, docTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,12 +18,20 @@ public class DocumentViewerActivity extends AppCompatActivity {
 
         if(getSupportActionBar() != null) getSupportActionBar().hide();
 
-        ImageView exitButton = (ImageView) findViewById(R.id.exit_document_button);
+        exitButton = (ImageView) findViewById(R.id.exit_document_button);
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
+
+        docTitleView = (TextView) findViewById(R.id.document_title);
+        docTextView = (TextView) findViewById(R.id.document_text);
+
+        Bundle b = getIntent().getExtras();
+        docTitleView.setText(b.getString("DOC_TITLE"));
+        docTextView.setText(b.getString("DOC_TEXT"));
+
     }
 }

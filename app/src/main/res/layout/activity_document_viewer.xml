@@ -32,15 +32,17 @@
     <android.support.v7.widget.CardView
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:layout_width="wrap_content"
+        android:background="@color/white"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="vertical"
             android:paddingTop="@dimen/activity_vertical_margin"
             android:paddingBottom="@dimen/activity_vertical_margin"
-            app:paddingStart="@dimen/activity_horizontal_margin"
-            app:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -48,19 +50,25 @@
             android:id="@+id/document_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="top|start"
-            android:text="Title"/>
+            android:layout_marginBottom="10dp"
+            android:textSize="30dp"
+            android:textAppearance="?attr/textAppearanceSearchResultTitle"
+            android:background="@color/white"
+            android:gravity="top|start"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:layout_marginBottom="10dp"
             android:background="@android:color/darker_gray" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceSearchResultSubtitle"
+            android:background="@color/white"
             android:id="@+id/document_text"
-            android:text="Content of document. The document can have multiple lines of text that can often seem that there's endless amounts of text and that you just have to read it all and well what else can you really do if you really need to read the content of this text quite frankly its just one of things you have to deal with as a programmer and it sucks but well what else do you do but keep coding and lol what am i even saying."/>
+            />
 
         </LinearLayout>
 

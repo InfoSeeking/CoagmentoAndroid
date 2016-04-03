@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_features">
+        <CheckBoxPreference android:key="@string/pref_key_search"
+            android:title="@string/pref_title_search"
+            android:enabled="false"/>
+
+        <CheckBoxPreference android:key="@string/pref_key_chat"
+            android:title="@string/pref_title_chat"
+            android:enabled="false"/>
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_about_title">
+        <Preference android:key="pref_version" />
+        <Preference
+            android:key="@string/pref_key_about"
+            android:title="@string/pref_title_about" />
+        <Preference
+            android:key="@string/pref_key_team"
+            android:title="@string/pref_title_team" />
+        <Preference
+            android:key="@string/open_source_key"
+            android:title="@string/open_source_title" />
+        <Preference
+            android:key="@string/attributions_key"
+            android:title="@string/pref_attributions_title" />
+    </PreferenceCategory>
+</PreferenceScreen>

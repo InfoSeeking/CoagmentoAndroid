@@ -28,6 +28,7 @@ import org.coagmento.android.DocumentViewerActivity;
 import org.coagmento.android.R;
 import org.coagmento.android.adapter.DocumentsAdapter;
 import org.coagmento.android.data.EndpointsInterface;
+import org.coagmento.android.models.DocumentTextResponse;
 import org.coagmento.android.models.ListResponse;
 import org.coagmento.android.models.NullResponse;
 import org.coagmento.android.models.PagesListResponse;
@@ -98,7 +99,7 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
         mRecyclerView.setAdapter(mAdapter);
 
         noDataMessage = (TextView) view.findViewById(R.id.noDataFound);
-        noDataMessage.setText(getString(R.string.prompt_no_pages_found));
+        noDataMessage.setText(getString(R.string.prompt_no_documents_found));
 
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.bookmarks_swiperefresh);
         refreshLayout.setColorSchemeColors(Color.RED, Color.BLUE, Color.YELLOW);
@@ -134,7 +135,7 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
                     mAdapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
 
-                    if(documents.size() > 0) {
+                    if (documents.size() > 0) {
                         noDataMessage.setVisibility(View.GONE);
                         mRecyclerView.setVisibility(View.VISIBLE);
                     } else {
@@ -142,7 +143,7 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
                         mRecyclerView.setVisibility(View.GONE);
                     }
                 } else {
-                        Log.e("Response Code: ", String.valueOf(response.code()));
+                    Log.e("Response Code: ", String.valueOf(response.code()));
                 }
             }
 
@@ -157,7 +158,7 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
         call1.enqueue(new Callback<UserListResponse>() {
             @Override
             public void onResponse(Response<UserListResponse> response, Retrofit retrofit) {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     users.clear();
                     users.addAll(response.body().getResult());
                 }
@@ -172,8 +173,7 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
 
     @Override
     public void onItemClicked(int position) {
-        startActivity(new Intent(getActivity(), DocumentViewerActivity.class));
-        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        viewDocument(documents.get(position).getId(), documents.get(position).getTitle());
     }
 
     @Override
@@ -201,9 +201,6 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
                                 dialog.dismiss();
                                 deleteDocument(documents.get(position));
                             default:
-                                Snackbar snackbar = Snackbar
-                                        .make(rootView, strName, Snackbar.LENGTH_LONG);
-                                snackbar.show();
                                 break;
                         }
 
@@ -223,16 +220,53 @@ public class DocumentsFragment extends Fragment implements DocumentsAdapter.OnIt
 
         EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
 
-        Call<NullResponse> call = apiService.deletePage(document.getId(), email, password);
+        Call<NullResponse> call = apiService.deleteDocument(document.getId(), email, password);
 
         call.enqueue(new Callback<NullResponse>() {
             @Override
             public void onResponse(Response<NullResponse> response, Retrofit retrofit) {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     Snackbar snackbar = Snackbar
                             .make(rootView, "Document Deleted.", Snackbar.LENGTH_SHORT);
                     snackbar.show();
                     loadList(project_id);
+                } else {
+                    Snackbar snackbar = Snackbar
+                            .make(rootView, "HTTP Error Code: " + response.code(), Snackbar.LENGTH_SHORT);
+                    snackbar.show();
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Snackbar snackbar = Snackbar
+                        .make(rootView, "Error: " + t.getMessage(), Snackbar.LENGTH_SHORT);
+                snackbar.show();
+            }
+        });
+
+    }
+
+    private void viewDocument(int doc_id, final String doc_title) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(host)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
+
+        Call<DocumentTextResponse> call = apiService.getDocumentText(doc_id, project_id, email, password);
+
+        call.enqueue(new Callback<DocumentTextResponse>() {
+            @Override
+            public void onResponse(Response<DocumentTextResponse> response, Retrofit retrofit) {
+                if(response.code() == 200) {
+                    Intent intent = new Intent(getActivity(), DocumentViewerActivity.class);
+                    intent.putExtra("DOC_TITLE", doc_title);
+                    String doc_text = response.body().getResult().getText().getText();
+                    intent.putExtra("DOC_TEXT", doc_text);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 } else {
                     Snackbar snackbar = Snackbar
                             .make(rootView, "HTTP Error Code: " + response.code(), Snackbar.LENGTH_SHORT);

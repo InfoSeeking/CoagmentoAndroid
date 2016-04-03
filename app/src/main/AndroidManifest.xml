@@ -58,9 +58,16 @@
         </activity>
         <activity android:name=".EditSnippet" />
         <activity android:name=".EditBookmark" />
-        <activity android:name=".DocumentViewerActivity"
+        <activity
+            android:name=".DocumentViewerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/TranslucentTheme"></activity>
+            android:theme="@style/TranslucentTheme" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="248125ff2651e7d845680d8ec182a5582e927d5b" />
+
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
