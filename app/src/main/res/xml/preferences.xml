@@ -9,6 +9,9 @@
             android:title="@string/pref_title_chat"
             android:enabled="false"/>
 
+        <CheckBoxPreference android:key="pref_notification"
+            android:title="Notification Service"
+            android:enabled="true"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_about_title">
         <Preference android:key="pref_version" />

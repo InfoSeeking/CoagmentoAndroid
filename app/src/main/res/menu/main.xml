@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
+    <item android:icon="@android:drawable/sym_action_chat"
+        app:showAsAction="always"
+        android:id="@+id/action_chat"
+        android:title="@string/action_setting_chat"  />
+
     <item android:icon="@drawable/ic_settings_white_24dp"
         app:showAsAction="always"
         android:id="@+id/action_settings"

@@ -123,4 +123,6 @@
     <string name="title_about_coagmento">About Coagmento</string>
     <string name="description_about_coagmento">Coagmento was originally developed in 2007 by Chirag Shah as a research project for his dissertation. It then continued taking shape in different forms as various user studies were designed around and with it. Coagmento was brought to Rutgers University, where its development was furthered by PhD student Roberto Gonzalez-Ibanez. Several other students contributed in creating different versions and functions of the system, as well as using it for research studies.</string>
     <string name="about_team"><b>Chirag Shah</b>\nAdvisor\n\n<b>Roberto Gonzalez-Ibanez</b>\nConsultant\n\n<b>Kevin Albertson</b>\nBackend Developer\n\n<b>Abdulaziz Ramos</b>\nWeb Designer\n\n<b>Yash Shah</b>\nAndroid Developer\n\n</string>
+    <string name="action_setting_chat">Chat</string>
+    <string name="prompt_message">Enter your message...</string>
 </resources>

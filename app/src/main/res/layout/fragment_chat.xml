@@ -1,34 +1,76 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.coagmento.android.ChatFragment">
+    tools:context="com.coagmento.mobile.MainActivity">
 
-    <ScrollView
-        android:layout_weight="10"
+    <co.devcenter.android.ChatView
+        android:id="@+id/chat_view"
+        app:inputBarBackgroundColor="@color/white"
+        app:sendBtnIconTint="@color/colorPrimaryDark"
+        app:inputBackgroundColor="@android:color/transparent"
+        app:sendBtnBackgroundTint="@android:color/transparent"
+        app:inputElevation="0dp"
+        app:inputTextSize="20sp"
+        app:sendBtnElevation="0dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/messagesRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+</RelativeLayout>
 
-    </ScrollView>
 
-    <LinearLayout
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<LinearLayout-->
+    <!--android:orientation="vertical"-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:context="com.coagmento.mobile.MainActivity">-->
 
-        <android.support.v7.widget.AppCompatEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/send_message_hint"/>
+    <!--<ScrollView-->
+        <!--android:layout_weight="10"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="450dp">-->
 
-    </LinearLayout>
+        <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/message_recyclerview"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"/>-->
 
-</LinearLayout>
+    <!--</ScrollView>-->
 
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@android:color/darker_gray"/>-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_weight="1"-->
+        <!--android:id="@+id/message_bar"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_gravity="bottom">-->
+
+        <!--<EditText-->
+            <!--android:layout_weight="10"-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:hint="@string/prompt_message"-->
+            <!--android:id="@+id/message_box"-->
+            <!--android:lines="4" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/message_button"-->
+            <!--android:layout_weight="0.75"-->
+            <!--android:background="@android:drawable/ic_menu_send"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="wrap_content" />-->
+
+    <!--</LinearLayout>-->
+<!--</LinearLayout>-->
