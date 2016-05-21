@@ -16,6 +16,7 @@ import com.coagmento.mobile.models.Result;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +25,7 @@ import java.util.Date;
 import co.devcenter.android.ChatView;
 import co.devcenter.android.models.ChatMessage;
 import io.socket.client.IO;
+import io.socket.client.Manager;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import retrofit.Call;
@@ -165,7 +167,10 @@ public class ChatFragment extends Fragment {
         try {
 
             Log.i("SOCKET", "trying connection");
-            final Socket socket = IO.socket("http://new.coagmento.org:8000");
+            Manager manager = new Manager(new URI("http://new.coagmento.org:8000"));
+            final Socket socket = manager.socket("/feed");
+
+            socket.connect();
 
             socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
                 @Override
@@ -191,7 +196,26 @@ public class ChatFragment extends Fragment {
                 @Override
                 public void call(Object... args) {
                     if(args.length > 0) {
-                        Log.i("SOCKET", "response: " + args[0]);
+                        JSONObject response = (JSONObject) args[0];
+                        try {
+                            String message = response.getJSONArray("data").getJSONObject(0).getString("message");
+
+                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                            Date date = formatter.parse(response.getJSONArray("data").getJSONObject(0).getString("created_at"));
+                            long time = date.getTime();
+                            ChatMessage.Type type;
+                            if(response.getJSONArray("data").getJSONObject(0).getJSONObject("user").getString("email").equals(email)) {
+                                type = ChatMessage.Type.SENT;
+                            } else {
+                                type = ChatMessage.Type.RECEIVED;
+                            }
+
+                            chatView.newMessage(new ChatMessage(message, time, type));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });
