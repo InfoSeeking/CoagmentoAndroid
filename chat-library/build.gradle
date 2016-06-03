@@ -33,5 +33,4 @@ dependencies {
 
     // compile 'com.getbase:floatingactionbutton:1.10.0'
     compile 'pl.tajchert:waitingdots:0.2.0'
-    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 }

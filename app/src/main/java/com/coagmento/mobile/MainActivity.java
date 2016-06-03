@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.coagmento.mobile.fragment.ChatFragment;
 import com.coagmento.mobile.services.NotificationService;
 import com.crashlytics.android.Crashlytics;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -320,7 +319,7 @@ public class MainActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(com.coagmento.mobile.R.id.pager);
         viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(),
                 MainActivity.this));
-        viewPager.setOffscreenPageLimit(6);
+        viewPager.setOffscreenPageLimit(5);
 
         // Give the TabLayout the ViewPager
         tabLayout = (TabLayout) findViewById(com.coagmento.mobile.R.id.sliding_tabs);
@@ -398,6 +397,14 @@ public class MainActivity extends AppCompatActivity
             finish();
             return true;
         } else if(id == R.id.action_chat) {
+            Intent intent = new Intent(this, ChatActivity.class);
+            intent.putExtra("host", host);
+            intent.putExtra("email", email);
+            intent.putExtra("password", password);
+            intent.putExtra("project_id", currentProject.getId());
+            intent.putExtra("project_title", currentProject.getTitle());
+            intent.putExtra("project_permission", currentProject.getLevel());
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -457,10 +464,6 @@ public class MainActivity extends AppCompatActivity
                     } else if (fragment instanceof DocumentsFragment) {
                         DocumentsFragment documentsFragment = (DocumentsFragment) fragment;
                         documentsFragment.loadList(currentProject.getProjectId());
-                    } else if(fragment instanceof ChatFragment) {
-                        ChatFragment chatFragment = (ChatFragment) fragment;
-                        chatFragment.populateMessageView();
-                        chatFragment.initializeSocket(currentProject.getId());
                     }
                 }
             }
@@ -543,8 +546,8 @@ public class MainActivity extends AppCompatActivity
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-        final int PAGE_COUNT = 6;
-        private String tabTitles[] = new String[]{"Pages", "Searches", "Bookmarks", "Snippets", "Documents", "Chat"};
+        final int PAGE_COUNT = 5;
+        private String tabTitles[] = new String[]{"Pages", "Searches", "Bookmarks", "Snippets", "Documents"};
         private Context context;
 
         public SectionsPagerAdapter(FragmentManager fm, Context context) {
@@ -576,8 +579,6 @@ public class MainActivity extends AppCompatActivity
                         return SnippetsFragment.newInstance(userInfo);
                     case 4:
                         return DocumentsFragment.newInstance(userInfo);
-                    case 5:
-                        return ChatFragment.newInstance(userInfo);
                     default:
                         return MainFragment.newInstance();
                 }
