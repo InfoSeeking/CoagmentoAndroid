@@ -14,6 +14,7 @@ import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity  {
     private EditText mEmailView;
     private EditText mPasswordView;
     private AlertDialog alertDialog;
+    private AppCompatButton demoLoginButton;
 
     private Bundle userInfo = new Bundle();
 
@@ -66,6 +68,16 @@ public class LoginActivity extends AppCompatActivity  {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        demoLoginButton = (AppCompatButton) findViewById(R.id.demo_sign_in_button);
+        demoLoginButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mEmailView.setText("coagmento_demo@demo.demo");
+                mPasswordView.setText("demo");
+                attemptLogin();
             }
         });
 
