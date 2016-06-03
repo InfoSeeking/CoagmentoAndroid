@@ -1,12 +1,18 @@
 package com.coagmento.mobile.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.coagmento.mobile.Coagmento;
 import com.coagmento.mobile.R;
 import com.coagmento.mobile.data.EndpointsInterface;
 import com.coagmento.mobile.models.ChatListResponse;
@@ -16,6 +22,7 @@ import com.coagmento.mobile.models.Result;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -42,8 +49,13 @@ public class ChatFragment extends Fragment {
     private String host, email, password;
     private int project_id;
     private Bundle userInfo;
-
+    private Retrofit retrofit;
+    private EndpointsInterface apiService;
     private ChatView chatView;
+    private FragmentActivity context;
+    private Coagmento app;
+    private Socket socket;
+    private boolean isConnected = false;
 
     public ChatFragment() {
         // Required empty public constructor
@@ -61,6 +73,17 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 
+        context = getActivity();
+        app = (Coagmento) context.getApplication();
+        socket = app.getSocket();
+
+        socket.on(Socket.EVENT_CONNECT, onConnect);
+        socket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
+        socket.on(Socket.EVENT_DISCONNECT, onDisconnect);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         chatView = (ChatView) rootView.findViewById(R.id.chat_view);
 
         userInfo = getArguments();
@@ -70,34 +93,15 @@ public class ChatFragment extends Fragment {
         password = userInfo.getString("password");
         project_id = userInfo.getInt("project_id");
 
-
-        // Retrieve previous messages
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(host)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        final EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
-
-        Call<ChatListResponse> getChatMessages = apiService.getChatMessages(project_id, email, password);
-
-        getChatMessages.enqueue(new Callback<ChatListResponse>() {
-            @Override
-            public void onResponse(Response<ChatListResponse> response, Retrofit retrofit) {
-                if(response.code() == 200) {
-                    populateMessageView(response.body());
-                } else {
-                    Log.e("HTTP Error: ", String.valueOf(response.code()));
-                }
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.e("Error", t.getMessage());
-            }
-        });
+        apiService = retrofit.create(EndpointsInterface.class);
 
         chatView.setChatListener(new ChatView.ChatListener() {
+
             @Override
             public void userIsTyping() {
 
@@ -110,37 +114,56 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onMessageReceived(String message, long timestamp) {
-
             }
 
             @Override
             public boolean sendMessage(String message, long timestamp) {
+                final EndpointsInterface apiService = retrofit.create(EndpointsInterface.class);
+
                 Call<CreateChatMessageResponse> sendMessage = apiService.sendMessage(message, project_id, email, password);
-                sendMessage.enqueue(new Callback<CreateChatMessageResponse>() {
-                    @Override
-                    public void onResponse(Response<CreateChatMessageResponse> response, Retrofit retrofit) {
-                        if(response.code() == 200) {
 
-                        } else {
-                            Log.e("HTTP Error", String.valueOf(response.code()));
-                        }
-                    }
+                Response<CreateChatMessageResponse> response = null;
 
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Log.e("Error", t.getMessage());
+                try {
+                    response = sendMessage.execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if(response == null) {
+                    return false;
+                } else {
+                    if(response.code() == 200) {
+                        return true;
+                    } else {
+                        Log.e("Chat Message Error", "HTTP Error Code: " + String.valueOf(response.code()));
+                        return false;
                     }
-                });
-                return false;
+                }
             }
         });
 
+        populateMessageView();
         initializeSocket(project_id);
 
         return rootView;
     }
 
-    private void populateMessageView(ChatListResponse response) {
+    public void populateMessageView() {
+
+        chatView.removeAllMessages();
+
+        Call<ChatListResponse> getChatMessages = apiService.getChatMessages(project_id, email, password);
+
+        ChatListResponse response = null;
+        try {
+            response = getChatMessages.execute().body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if(response == null) return;
+
         for(Result message : response.getResult()) {
             try {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -151,78 +174,93 @@ public class ChatFragment extends Fragment {
                 } else {
                     type = ChatMessage.Type.RECEIVED;
                 }
-                chatView.newMessage(new ChatMessage(message.getMessage(), date.getTime(), type));
+                chatView.newMessage(new ChatMessage(message.getUser().getName(), message.getMessage(), date.getTime(), type));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void initializeSocket(int project_id) {
+
+        // disconnect from previous room if socket is already connected
+        if(isConnected) socket.disconnect();
+
+        try {
+            socket.emit("subscribe", new JSONObject("{ projectID:" + String.valueOf(project_id) + " }"));
+            socket.on("data", onData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        socket.connect();
+
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        socket.disconnect();
+
+        socket.off(Socket.EVENT_CONNECT, onConnect);
+        socket.off(Socket.EVENT_CONNECT_ERROR, onConnectError);
+        socket.off(Socket.EVENT_DISCONNECT, onDisconnect);
+        socket.off("data", onData);
     }
 
-    public void initializeSocket(final int id) {
-        try {
-
-            Log.i("SOCKET", "trying connection");
-            Manager manager = new Manager(new URI("http://new.coagmento.org:8000"));
-            final Socket socket = manager.socket("/feed");
-
-            socket.connect();
-
-            socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Log.i("SOCKET", "connected");
-                    try {
-                        socket.emit("subscribe", new JSONObject("{ projectID:" + String.valueOf(id) + " }"));
-                        Log.i("SOCKET", "emmited subscirbe");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            socket.on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Log.i("SOCKET", "Error connecting");
-                }
-            });
-
-            socket.on("data", new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    if(args.length > 0) {
-                        JSONObject response = (JSONObject) args[0];
-                        try {
-                            String message = response.getJSONArray("data").getJSONObject(0).getString("message");
-
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                            Date date = formatter.parse(response.getJSONArray("data").getJSONObject(0).getString("created_at"));
-                            long time = date.getTime();
-                            ChatMessage.Type type;
-                            if(response.getJSONArray("data").getJSONObject(0).getJSONObject("user").getString("email").equals(email)) {
-                                type = ChatMessage.Type.SENT;
-                            } else {
-                                type = ChatMessage.Type.RECEIVED;
-                            }
-
-                            chatView.newMessage(new ChatMessage(message, time, type));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+    private Emitter.Listener onConnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            isConnected = true;
         }
-    }
+    };
+
+    private Emitter.Listener onConnectError = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            new Error("Socket failed to connect.").printStackTrace();
+        }
+    };
+
+    private Emitter.Listener onDisconnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            isConnected = false;
+        }
+    };
+
+    private Emitter.Listener onData = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            if(args.length > 0) {
+                JSONObject response = (JSONObject) args[0];
+                try {
+                    final String sender = response.getJSONArray("data").getJSONObject(0).getJSONObject("user").getString("name");
+
+                    final String message = response.getJSONArray("data").getJSONObject(0).getString("message");
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    Date date = formatter.parse(response.getJSONArray("data").getJSONObject(0).getString("created_at"));
+                    final long time = date.getTime();
+
+                    final ChatMessage.Type type =
+                            (response.getJSONArray("data").getJSONObject(0).getJSONObject("user").getString("email").equals(email) ? ChatMessage.Type.SENT : ChatMessage.Type.RECEIVED);
+
+                    context.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            chatView.newMessage(new ChatMessage(sender, message, time, type));
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
 
 }

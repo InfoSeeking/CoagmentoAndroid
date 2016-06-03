@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(com.coagmento.mobile.R.id.pager);
         viewPager.setAdapter(new SectionsPagerAdapter(getSupportFragmentManager(),
                 MainActivity.this));
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(6);
 
         // Give the TabLayout the ViewPager
         tabLayout = (TabLayout) findViewById(com.coagmento.mobile.R.id.sliding_tabs);
@@ -458,6 +458,9 @@ public class MainActivity extends AppCompatActivity
                         DocumentsFragment documentsFragment = (DocumentsFragment) fragment;
                         documentsFragment.loadList(currentProject.getProjectId());
                     } else if(fragment instanceof ChatFragment) {
+                        ChatFragment chatFragment = (ChatFragment) fragment;
+                        chatFragment.populateMessageView();
+                        chatFragment.initializeSocket(currentProject.getId());
                     }
                 }
             }

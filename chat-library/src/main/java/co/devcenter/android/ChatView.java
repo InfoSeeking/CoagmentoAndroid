@@ -24,9 +24,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.amulyakhare.textdrawable.TextDrawable;
 
 import java.util.ArrayList;
 
@@ -301,15 +304,13 @@ public class ChatView extends LinearLayout {
     }
 
     public void sendMessage(String message, long stamp) {
-        ChatMessage chatMessage = new ChatMessage(message, stamp, Type.SENT);
         if (chatListener != null && chatListener.sendMessage(message, stamp)) {
-            chatViewListAdapter.addMessage(chatMessage);
             inputEditText.setText("");
         }
     }
 
     public void newMessage(String message) {
-        ChatMessage chatMessage = new ChatMessage(message, System.currentTimeMillis(), Type.RECEIVED);
+        ChatMessage chatMessage = new ChatMessage("You", message, System.currentTimeMillis(), Type.RECEIVED);
         chatViewListAdapter.addMessage(chatMessage);
         notifyMessageReceivedListener(chatMessage);
     }
@@ -317,6 +318,10 @@ public class ChatView extends LinearLayout {
     public void newMessage(ChatMessage chatMessage) {
         chatViewListAdapter.addMessage(chatMessage);
         notifyMessageReceivedListener(chatMessage);
+    }
+
+    public void removeAllMessages() {
+        chatViewListAdapter.removeAllMessages();
     }
 
     public void notifyMessageReceivedListener(ChatMessage chatMessage) {
@@ -395,6 +400,10 @@ public class ChatView extends LinearLayout {
             holder.getMessageTextView().setText(chatMessages.get(position).getMessage());
             holder.getTimestampTextView().setText(chatMessages.get(position).getFormattedTime());
 
+            if(getItemViewType(position) == STATUS_RECEIVED) {
+                holder.getSenderTextView().setText(chatMessages.get(position).getSender());
+            }
+
             return convertView;
         }
 
@@ -403,8 +412,14 @@ public class ChatView extends LinearLayout {
             notifyDataSetChanged();
         }
 
+        public void removeAllMessages() {
+            chatMessages.clear();
+            notifyDataSetChanged();
+        }
+
         class ViewHolder {
             View row;
+            TextView senderTextView;
             TextView messageTextView;
             TextView timestampTextView;
 
@@ -425,6 +440,14 @@ public class ChatView extends LinearLayout {
                 }
 
                 return timestampTextView;
+            }
+
+            public TextView getSenderTextView() {
+                if(senderTextView == null) {
+                    senderTextView = (TextView) row.findViewById(R.id.sender_text_view);
+                }
+
+                return senderTextView;
             }
         }
     }

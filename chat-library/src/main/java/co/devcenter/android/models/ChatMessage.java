@@ -3,11 +3,13 @@ package co.devcenter.android.models;
 import android.text.format.DateFormat;
 
 public class ChatMessage {
+    private String sender;
     private String message;
     private long timestamp;
     private Type type;
 
-    public ChatMessage(String message, long timestamp, Type type){
+    public ChatMessage(String sender, String message, long timestamp, Type type){
+        this.sender = sender;
         this.message = message;
         this.timestamp = timestamp;
         this.type = type;
@@ -49,6 +51,14 @@ public class ChatMessage {
         }else{
             return DateFormat.format("dd MMM - hh:mm a", timestamp).toString();
         }
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
     public enum Type {
